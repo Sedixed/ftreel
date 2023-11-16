@@ -1,5 +1,6 @@
 using ftreel.DATA;
 using Microsoft.EntityFrameworkCore;
+using ftreel.Settings;
 
 internal class Program
 {
@@ -12,7 +13,7 @@ internal class Program
             var a = builder.Configuration.GetConnectionString("Database");
             options.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
         });
-
+        builder.Services.Configure<UploadSettings>(builder.Configuration.GetSection(nameof(UploadSettings)));
         // Add services to the container.
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
