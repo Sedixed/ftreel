@@ -1,0 +1,23 @@
+version: "3.7"
+ 
+services:
+  sql-server:
+    container_name: sql-server
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Root1234!
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  smtp:
+    container_name: smtp
+    image: dockage/mailcatcher:0.8.2
+    ports:
+      - 1080:1080
+      - 1025:1025
+
+volumes:
+  sql_data:
