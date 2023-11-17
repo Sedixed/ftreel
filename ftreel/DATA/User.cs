@@ -2,6 +2,10 @@
 
 public class User
 {
-    public string username { get; set; }
-    public string password { get; set; }
+    public int Id { get; set; }
+    
+    public required string Username { get; set; }
+    public string? Password { get; set; }
+
+    public List<string>? Roles { get; set; }
 }

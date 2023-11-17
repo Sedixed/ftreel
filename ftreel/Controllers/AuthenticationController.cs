@@ -22,16 +22,14 @@ public class AuthenticationController : Controller
     }
     
     /**
-     * Login route
-     *
-     * 
+     * Login route.
      */
     [HttpPost]
-    public async Task<IActionResult> Login([FromBody] User request)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         if (ModelState.IsValid)
         {
-            var user = await AuthenticateUser(request.username, request.password);
+            var user = await AuthenticateUser(request.Username, request.Password);
 
             if (user == null)
             {
@@ -41,7 +39,7 @@ public class AuthenticationController : Controller
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.username),
+                new Claim(ClaimTypes.Name, user.Username),
                 //new Claim("FullName", user.FullName),
                 new Claim(ClaimTypes.Role, "Administrator"),
             };
@@ -59,12 +57,16 @@ public class AuthenticationController : Controller
 
 
             _logger.LogInformation("User {username} logged in at {Time}.",
-                user.username, DateTime.UtcNow);
+                user.Username, DateTime.UtcNow);
         }
 
         return NoContent();
     }
 
+    
+    /**
+     * Logout route.
+     */
     [HttpPost]
     public async void Logout()
     {
@@ -74,12 +76,28 @@ public class AuthenticationController : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
 
+    /**
+     * Register new user route.
+     */
+    [HttpPost]
+    public IActionResult Register([FromBody] RegisterRequest request)
+    {
+        return NoContent();
+    }
+
+    /**
+     * Get current user logged.
+     */
     [HttpGet]
     public IActionResult GetUser()
     {
         return Ok(Json(User.Identity.Name));
     }
     
+    /**
+     * Private method to authenticate a user.
+     * Returns the user authenticated, or null if it does not exists in database.
+     */
     private async Task<User> AuthenticateUser(string username, string password)
     {
         await Task.Delay(500);
@@ -87,11 +105,14 @@ public class AuthenticationController : Controller
         if (username == "username") {
             return new User()
             {
-                username = username,
-                password = password
+                Username = username,
+                Password = password
             };
         } else {
             return null;
         }
     }
+
+    public record LoginRequest(string Username, string Password);
+    public record RegisterRequest(string Username, string Password, List<String> Roles);
 }
