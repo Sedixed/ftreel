@@ -1,6 +1,7 @@
 using ftreel.DATA;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 internal class Program
 {
@@ -13,6 +14,8 @@ internal class Program
         };*/
 
         var builder = WebApplication.CreateBuilder(args);
+
+        var AnyOrigins = "_anyOrigin";
 
         // Database
         builder.Services.AddDbContext<AppDBContext>(options =>
@@ -29,6 +32,14 @@ internal class Program
                 //options.SlidingExpiration = true;
             });
         
+        // Allow CORS
+
+        builder.Services.AddCors( options => {
+            options.AddPolicy(name: AnyOrigins,
+                              policy => {
+                                policy.WithOrigins("*");
+                              });
+        })
         
         // Add services to the container.
         builder.Services.AddControllers();
