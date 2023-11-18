@@ -37,9 +37,11 @@ internal class Program
         builder.Services.AddCors( options => {
             options.AddPolicy(name: AnyOrigins,
                               policy => {
-                                policy.WithOrigins("*");
+                                policy.WithOrigins("*")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
                               });
-        })
+        });
         
         // Add services to the container.
         builder.Services.AddControllers();
