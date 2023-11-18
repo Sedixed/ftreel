@@ -37,7 +37,8 @@ internal class Program
         builder.Services.AddCors( options => {
             options.AddPolicy(name: AnyOrigins,
                               policy => {
-                                policy.WithOrigins("*")
+                                policy
+                                .AllowAnyOrigin()
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                               });
@@ -60,6 +61,7 @@ internal class Program
 
         app.UseRouting();
 
+        app.UseCors(AnyOrigins);
         app.UseAuthentication();
         app.UseAuthorization();
         //app.UseCookiePolicy(cookiePolicyOptions);
