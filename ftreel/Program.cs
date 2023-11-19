@@ -25,7 +25,7 @@ internal class Program
             options.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
         });
 
-        // Authentication
+        // Authentication cookie customization
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
@@ -37,14 +37,14 @@ internal class Program
             });
         
         // Allow CORS
-
         builder.Services.AddCors( options => {
             options.AddPolicy(name: AnyOrigins,
                               policy => {
                                   policy
-                                  .AllowAnyOrigin()
+                                  .WithOrigins("http://localhost:5173")
                                   .AllowAnyHeader()
-                                  .AllowAnyMethod();
+                                  .AllowAnyMethod()
+                                  .AllowCredentials();
                               });
         });
         
