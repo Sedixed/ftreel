@@ -1,5 +1,6 @@
 using ftreel.DATA;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 
@@ -30,6 +31,9 @@ internal class Program
             {
                 //options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
                 //options.SlidingExpiration = true;
+                options.Cookie.HttpOnly = false;
+                options.Cookie.IsEssential = true;
+                options.Cookie.SameSite = SameSiteMode.Lax;
             });
         
         // Allow CORS
@@ -37,10 +41,10 @@ internal class Program
         builder.Services.AddCors( options => {
             options.AddPolicy(name: AnyOrigins,
                               policy => {
-                                policy
-                                .AllowAnyOrigin()
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
+                                  policy
+                                  .AllowAnyOrigin()
+                                  .AllowAnyHeader()
+                                  .AllowAnyMethod();
                               });
         });
         
