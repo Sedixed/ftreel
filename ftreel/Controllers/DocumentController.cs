@@ -117,5 +117,18 @@ namespace ftreel.Controllers
             
             return Ok();
         }
+
+        [HttpGet("get/{id}")]
+        public async Task<IActionResult> GetFile(int id) {
+            var document = await _dbcontext.Documents.FindAsync(id);
+
+            if (document == null)
+                return NotFound();
+
+            using (var stream = new FileStream(document.FilePath, FileMode.Open))
+            {
+                // Open a navigator tab to visualize the document 
+            }
+        }
     }
 }
