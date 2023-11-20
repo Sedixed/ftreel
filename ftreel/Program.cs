@@ -17,6 +17,7 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         var AnyOrigins = "_anyOrigin";
+        var Origin = builder.Configuration.GetConnectionString("Origin");
 
         // Database
         builder.Services.AddDbContext<AppDBContext>(options =>
@@ -41,7 +42,7 @@ internal class Program
             options.AddPolicy(name: AnyOrigins,
                               policy => {
                                   policy
-                                  .WithOrigins("http://localhost:5173")
+                                  .WithOrigins(Origin)
                                   .AllowAnyHeader()
                                   .AllowAnyMethod()
                                   .AllowCredentials();
