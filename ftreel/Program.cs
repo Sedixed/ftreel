@@ -26,6 +26,7 @@ internal class Program
             var a = builder.Configuration.GetConnectionString("Database");
             options.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
         });
+        
         builder.Services.Configure<UploadSettings>(builder.Configuration.GetSection(nameof(UploadSettings)));
 
         // Authentication cookie customization
