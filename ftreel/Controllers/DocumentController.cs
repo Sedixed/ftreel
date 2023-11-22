@@ -129,6 +129,8 @@ namespace ftreel.Controllers
             {
                 // Open a navigator tab to visualize the document 
             }
+
+            return Ok();
         }
     }
 }
