@@ -1,4 +1,5 @@
 using ftreel.DATA;
+using ftreel.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,6 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-
         /*var cookiePolicyOptions = new CookiePolicyOptions
         {
             MinimumSameSitePolicy = SameSiteMode.Strict,
@@ -26,7 +26,7 @@ internal class Program
             var a = builder.Configuration.GetConnectionString("Database");
             options.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
         });
-        
+
         builder.Services.Configure<UploadSettings>(builder.Configuration.GetSection(nameof(UploadSettings)));
 
         // Authentication cookie customization
@@ -39,21 +39,25 @@ internal class Program
                 options.Cookie.IsEssential = true;
                 options.Cookie.SameSite = SameSiteMode.Lax;
             });
-        
+
         // Allow CORS
-        builder.Services.AddCors( options => {
+        builder.Services.AddCors(options =>
+        {
             options.AddPolicy(name: AnyOrigins,
-                              policy => {
-                                  policy
-                                  .WithOrigins(Origin)
-                                  .AllowAnyHeader()
-                                  .AllowAnyMethod()
-                                  .AllowCredentials();
-                              });
+                policy =>
+                {
+                    policy
+                        .WithOrigins(Origin)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
         });
-        
+
         // Add services to the container.
         builder.Services.AddControllers();
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<AuthenticationService, AuthenticationService>();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -78,5 +82,4 @@ internal class Program
 
         app.Run();
     }
-
 }
