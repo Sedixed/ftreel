@@ -480,3 +480,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Upload documents directory
+ftreel/upload
