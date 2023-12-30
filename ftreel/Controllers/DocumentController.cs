@@ -1,6 +1,7 @@
 using ftreel.DATA;
 using ftreel.Dto.document;
 using ftreel.Entities;
+using ftreel.Exceptions;
 using ftreel.Services;
 using ftreel.Utils;
 using Microsoft.AspNetCore.Mvc;
@@ -18,45 +19,61 @@ public class DocumentController : Controller
     
     private readonly AppDBContext _dbcontext;
 
-    private readonly DocumentService _documentService;
+    private readonly IDocumentService _documentService;
 
-    public DocumentController(ILogger<DocumentController> logger, AppDBContext dbcontext, DocumentService documentService)
+    public DocumentController(ILogger<DocumentController> logger, AppDBContext dbcontext, IDocumentService documentService)
     {
-        _dbcontext = dbcontext;
         _logger = logger;
+        _dbcontext = dbcontext;
         _documentService = documentService;
     }
+    
+    /**
+     * Get a file.
+     */
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetDocument(int id) {
+        try
+        {
+            var document = _documentService.FindDocument(id);
+            return Ok(document);
+        }
+        catch (ObjectNotFoundException e)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 
+    /**
+     * Get all files.
+     */
+    public async Task<IActionResult> GetAllDocuments()
+    {
+        try
+        {
+            var documents = _documentService.FindAllDocuments();
+            return Ok(documents);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
     /**
      * Upload a file
      */
     [HttpPost]
     public async Task<IActionResult> UploadDocument(SaveDocumentDTO request)
     {
-        var user = _documentService.Save(request);
+        var user = _documentService.SaveDocument(request);
         
         _logger.LogInformation(request.Title + " file created.");
         return Ok(user);
-    }
-
-    /**
-     * Get a file.
-     */
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> DownloadFile(int id) {
-        var document = await _dbcontext.Documents.FindAsync(id);
-
-        if (document == null)
-            return NotFound();
-
-        var memory = new MemoryStream();
-
-        using (var stream = new FileStream(document.FilePath, FileMode.Open))
-            await stream.CopyToAsync(memory);
-
-        memory.Position = 0;
-
-        return File(memory, UtilsClass.GetContentType(document.FilePath), document.Title);
     }
 
     [HttpDelete("{id:int}")]
@@ -103,24 +120,6 @@ public class DocumentController : Controller
 
         await _dbcontext.SaveChangesAsync();
         
-        return Ok();
-    }
-
-    /**
-     * Get a file.
-     */
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetFile(int id) {
-        var document = await _dbcontext.Documents.FindAsync(id);
-
-        if (document == null)
-            return NotFound();
-
-        using (var stream = new FileStream(document.FilePath, FileMode.Open))
-        {
-            // Open a navigator tab to visualize the document 
-        }
-
         return Ok();
     }
 }

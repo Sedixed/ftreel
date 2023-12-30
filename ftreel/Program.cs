@@ -60,8 +60,8 @@ internal class Program
         builder.Services.AddHttpContextAccessor();
         // https://code-maze.com/dotnet-how-to-solve-unable-to-resolve-service-for-a-type/
         builder.Services.AddScoped<AuthenticationService, AuthenticationService>();
-        builder.Services.AddScoped<DocumentService, DocumentService>();
-        builder.Services.AddScoped<FileSystemStorageService, FileSystemStorageService>();
+        builder.Services.AddScoped<IDocumentService, DocumentService>();
+        builder.Services.AddScoped<IStorageService, FileSystemStorageService>();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
