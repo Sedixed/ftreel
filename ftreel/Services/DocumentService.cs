@@ -42,7 +42,21 @@ public class DocumentService : IDocumentService
 
     public IList<Document> FindAllDocuments()
     {
-        throw new NotImplementedException();
+        var documents = _dbContext.Documents.ToList();
+
+        foreach (var document in documents)
+        {
+            try
+            {
+                _fileSystemStorageService.loadBase64(document);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation(e.Message);
+            }
+        }
+
+        return documents;
     }
 
     /**

@@ -51,6 +51,7 @@ public class DocumentController : Controller
     /**
      * Get all files.
      */
+    [HttpGet]
     public async Task<IActionResult> GetAllDocuments()
     {
         try
