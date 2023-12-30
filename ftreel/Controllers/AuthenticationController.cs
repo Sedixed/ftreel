@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using DefaultNamespace;
+using ftreel.Constants;
 using ftreel.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -43,7 +43,7 @@ public class AuthenticationController : Controller
     public async void Logout()
     {
         _logger.LogInformation("User {Name} logged out at {Time}.", 
-            User.Identity.Name, DateTime.UtcNow);
+            User.Identity?.Name, DateTime.UtcNow);
             
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
@@ -70,7 +70,7 @@ public class AuthenticationController : Controller
     [HttpGet]
     public IActionResult GetUser()
     {
-        return Ok(Json(User.Identity.Name));
+        return Ok(Json(User.Identity?.Name));
     }
 
     /**
@@ -88,7 +88,7 @@ public class AuthenticationController : Controller
         {
             new Claim(ClaimTypes.Name, user.Username),
             //new Claim("FullName", user.FullName),
-            new Claim(ClaimTypes.Role, Roles.ADMIN),
+            new Claim(ClaimTypes.Role, Roles.ROLE_ADMIN),
         };
 
         var claimsIdentity = new ClaimsIdentity(
@@ -104,7 +104,7 @@ public class AuthenticationController : Controller
         _logger.LogInformation("User {username} logged in at {Time}.",
             user.Username, DateTime.UtcNow);
         
-        return Ok(Json(User.Identity.Name));
+        return Ok(Json(User.Identity?.Name));
     }
 
     /**

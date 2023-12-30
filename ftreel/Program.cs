@@ -1,3 +1,4 @@
+using ftreel.Constants;
 using ftreel.DATA;
 using ftreel.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -57,7 +58,10 @@ internal class Program
         // Add services to the container.
         builder.Services.AddControllers();
         builder.Services.AddHttpContextAccessor();
+        // https://code-maze.com/dotnet-how-to-solve-unable-to-resolve-service-for-a-type/
         builder.Services.AddScoped<AuthenticationService, AuthenticationService>();
+        builder.Services.AddScoped<DocumentService, DocumentService>();
+        builder.Services.AddScoped<FileSystemStorageService, FileSystemStorageService>();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -79,7 +83,11 @@ internal class Program
         //app.UseCookiePolicy(cookiePolicyOptions);
 
         app.MapControllers();
-
+        
+        // Create upload directory if not exists.
+        if(!Directory.Exists(UploadPath.UPLOAD_FILE))
+            Directory.CreateDirectory(UploadPath.UPLOAD_FILE);
+        
         app.Run();
     }
 }
