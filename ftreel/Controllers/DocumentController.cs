@@ -66,61 +66,63 @@ public class DocumentController : Controller
     }
     
     /**
-     * Upload a file
+     * Upload a file.
      */
     [HttpPost]
-    public async Task<IActionResult> UploadDocument(SaveDocumentDTO request)
+    public async Task<IActionResult> UploadDocument([FromBody] SaveDocumentDTO request)
     {
-        var user = _documentService.SaveDocument(request);
-        
-        _logger.LogInformation(request.Title + " file created.");
-        return Ok(user);
+        try
+        {
+            var document = _documentService.SaveDocument(request);
+            _logger.LogInformation(request.Title + " file created.");
+            return Ok(document);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteFile(int id) {
-        var document = await _dbcontext.Documents.FindAsync(id);
-
-        if (document == null)
-            return NotFound();
-
-        _dbcontext.Documents.Remove(document);
-        await _dbcontext.SaveChangesAsync();
-
-        System.IO.File.Delete(document.FilePath);
-
-        return Ok();
-    }
+    
 
     /**
      * Update a file.
      */
     [HttpPatch("{id:int}")]
-    // Je souhaite update les infos du document, pas le document en lui-même
-    public async Task<IActionResult> UpdateFile(int id, Document updatedDocument) {
-        if (id != updatedDocument.Id)
-            return BadRequest();
-
-        var existingDocument = await _dbcontext.Documents.FindAsync(id);
-
-        if (existingDocument == null)
-            return NotFound();
-
-        // Mettez à jour uniquement les propriétés non nulles
-
-        // TODO : Trouver un moyen de ne pas exposer le Document en paramètre de la méthode
-        // Hint : Faire un DTO
-        foreach (var property in typeof(Document).GetProperties())
+    public async Task<IActionResult> UpdateDocument(int id, [FromBody] SaveDocumentDTO request) {
+        try
         {
-            var updatedValue = property.GetValue(updatedDocument);
-            if (updatedValue != null && String.IsNullOrEmpty(updatedValue.ToString()) == false)
-            {
-                property.SetValue(existingDocument, updatedValue);
-            }
+            var document = _documentService.UpdateDocument(id, request);
+            _logger.LogInformation(request.Title + " file updated.");
+            return Ok(document);
         }
-
-        await _dbcontext.SaveChangesAsync();
-        
-        return Ok();
+        catch (ObjectNotFoundException e)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    /**
+     * Delete a file.
+     */
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteDocument(int id) {
+        try
+        {
+            _documentService.DeleteDocument(id);
+            return NoContent();
+        }
+        catch (ObjectNotFoundException e)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }

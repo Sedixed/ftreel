@@ -18,7 +18,9 @@ public class DocumentService : IDocumentService
         _dbContext = dbContext;
     }
 
-
+    /**
+     * Find a file using its ID.
+     */
     public Document FindDocument(int id)
     {
         var document = _dbContext.Documents.Find(id);
@@ -32,7 +34,7 @@ public class DocumentService : IDocumentService
         {
             _fileSystemStorageService.loadBase64(document);
         }
-        catch (Exception e)
+        catch (StorageException e)
         {
             _logger.LogInformation(e.Message);
         }
@@ -40,6 +42,9 @@ public class DocumentService : IDocumentService
         return document;
     }
 
+    /**
+     * Find all file from database and storage system.
+     */
     public IList<Document> FindAllDocuments()
     {
         var documents = _dbContext.Documents.ToList();
@@ -50,7 +55,7 @@ public class DocumentService : IDocumentService
             {
                 _fileSystemStorageService.loadBase64(document);
             }
-            catch (Exception e)
+            catch (StorageException e)
             {
                 _logger.LogInformation(e.Message);
             }
@@ -60,7 +65,7 @@ public class DocumentService : IDocumentService
     }
 
     /**
-     * Save a file in database and in storage system.
+     * Create a file in database and in storage system.
      */
     public Document SaveDocument(SaveDocumentDTO uploadRequest)
     {
@@ -75,21 +80,49 @@ public class DocumentService : IDocumentService
         );
         _dbContext.Add(document);
         _dbContext.SaveChanges();
-
-        Console.WriteLine(document.Id);
-        Console.WriteLine(document.Title);
+        
         _fileSystemStorageService.store(document);
 
         return document;
     }
 
-    public Document UpdateDocument(SaveDocumentDTO updateRequest)
+    /**
+     * Update a file in database and in storage system.
+     */
+    public Document UpdateDocument(int id, SaveDocumentDTO updateRequest)
     {
-        throw new NotImplementedException();
+        var document = _dbContext.Documents.Find(id);
+
+        if (document == null)
+        {
+            throw new ObjectNotFoundException();
+        }
+
+        return document;
     }
 
+    /**
+     * Delete a file from database and storage system using its ID.
+     */
     public void DeleteDocument(int id)
     {
-        throw new NotImplementedException();
+        var document = _dbContext.Documents.Find(id);
+
+        if (document == null)
+        {
+            throw new ObjectNotFoundException();
+        }
+
+        _dbContext.Documents.Remove(document);
+        try
+        {
+            _fileSystemStorageService.delete(document);
+        }
+        catch (StorageException e)
+        {
+            _logger.LogInformation(e.Message);
+        }
+
+        _dbContext.SaveChanges();
     }
 }

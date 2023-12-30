@@ -23,7 +23,7 @@ public interface IDocumentService
     /**
      * Update a file in database and in storage system.
      */
-    Document UpdateDocument(SaveDocumentDTO updateRequest);
+    Document UpdateDocument(int id, SaveDocumentDTO updateRequest);
 
     /**
      * Delete a file from database and storage system using its ID.
