@@ -2,13 +2,13 @@
 
 public class SaveDocumentDTO
 {
-    public string Title { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public string FilePath { get; set; } = string.Empty;
-    public string Extension { get; set; } = string.Empty;
-    public string Author { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
-    public string Base64 { get; set; } = string.Empty;
+    public string? Title { get; set; }
+    public string? Description { get; set; }
+    public string? FilePath { get; set; }
+    public string? Extension { get; set; }
+    public string? Author { get; set; }
+    public string? Category { get; set; }
+    public string? Base64 { get; set; }
 
     public SaveDocumentDTO()
     {

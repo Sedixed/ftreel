@@ -69,7 +69,7 @@ public class DocumentController : Controller
      * Upload a file.
      */
     [HttpPost]
-    public async Task<IActionResult> UploadDocument([FromBody] SaveDocumentDTO request)
+    public async Task<IActionResult> UploadDocument(SaveDocumentDTO request)
     {
         try
         {
@@ -89,7 +89,7 @@ public class DocumentController : Controller
      * Update a file.
      */
     [HttpPatch("{id:int}")]
-    public async Task<IActionResult> UpdateDocument(int id, [FromBody] SaveDocumentDTO request) {
+    public async Task<IActionResult> UpdateDocument(int id, SaveDocumentDTO request) {
         try
         {
             var document = _documentService.UpdateDocument(id, request);
