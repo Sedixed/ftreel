@@ -1,9 +1,7 @@
 using ftreel.DATA;
 using ftreel.Dto.document;
-using ftreel.Entities;
 using ftreel.Exceptions;
 using ftreel.Services;
-using ftreel.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ftreel.Controllers;
@@ -17,14 +15,11 @@ public class DocumentController : Controller
 {
     private readonly ILogger _logger;
     
-    private readonly AppDBContext _dbcontext;
-
     private readonly IDocumentService _documentService;
 
-    public DocumentController(ILogger<DocumentController> logger, AppDBContext dbcontext, IDocumentService documentService)
+    public DocumentController(ILogger<DocumentController> logger, IDocumentService documentService)
     {
         _logger = logger;
-        _dbcontext = dbcontext;
         _documentService = documentService;
     }
     
