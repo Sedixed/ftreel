@@ -8,22 +8,27 @@ public interface ICategoryService
     /**
      * Find a category by its ID.
      */
-    Category FindCategory(int id);
+    Category? FindCategory(int id);
 
+    /**
+     * Find a category using its path.
+     */
+    Category? FindCategoryWithPath(string path);
+    
     /**
      * Find all categories.
      */
-    IList<Category> FindAllCategories();
+    IList<Category?> FindAllCategories(string path);
 
     /**
      * Create a category.
      */
-    Category CreateCategory(SaveCategoryDTO createRequest);
+    Category? CreateCategory(SaveCategoryDTO createRequest);
 
     /**
      * Update an existing category.
      */
-    Category UpdateCategory(int id, SaveCategoryDTO updateRequest);
+    Category? UpdateCategory(int id, SaveCategoryDTO updateRequest);
 
      /**
       * Delete a category.

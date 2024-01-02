@@ -25,7 +25,7 @@ public class CategoryDTO
         ParentCategory = parentCategory;
     }
 
-    public CategoryDTO(Category category)
+    public CategoryDTO(Category? category)
     {
         Id = category.Id;
         Name = category.Name;

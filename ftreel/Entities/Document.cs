@@ -11,7 +11,7 @@ public class Document
     public string Extension { get; set; } = string.Empty;
     public string Author { get; set; } = string.Empty;
     public int? CategoryId { get; set; }
-    public Category? Category { get; set; }
+    public virtual Category? Category { get; set; }
     
     [NotMapped]
     public string Base64 { get; set; } = string.Empty;
@@ -27,7 +27,6 @@ public class Document
         Extension = extension;
         Author = author;
         CategoryId = category?.Id;
-        Category = category;
         Base64 = base64;
     }
 }

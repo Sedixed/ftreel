@@ -10,22 +10,19 @@ public class Category
     public string Name { get; set; } = string.Empty;
 
     public int? ParentCategoryId { get; set; }
-    public Category? ParentCategory { get; set; }
+    public virtual Category? ParentCategory { get; set; }
 
-    public IList<Category> ChildrenCategories { get; set; } = new List<Category>();
+    public virtual IList<Category> ChildrenCategories { get; set; } = new List<Category>();
     
-    public IList<Document> ChildrenDocuments { get; set; } = new List<Document>();
+    public virtual IList<Document> ChildrenDocuments { get; set; } = new List<Document>();
 
     public Category()
     {
     }
 
-    public Category(string name, Category? parentCategory, IList<Category> childrenCategories, IList<Document> childrenDocuments)
+    public Category(string name, Category? parentCategory)
     {
         Name = name;
         ParentCategoryId = parentCategory?.Id;
-        ParentCategory = parentCategory;
-        ChildrenCategories = childrenCategories;
-        ChildrenDocuments = childrenDocuments;
     }
 }

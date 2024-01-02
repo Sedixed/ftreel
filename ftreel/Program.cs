@@ -23,9 +23,10 @@ internal class Program
         builder.Services.AddDbContext<AppDBContext>(options =>
         {
             var a = builder.Configuration.GetConnectionString("Database");
+            options.UseLazyLoadingProxies();
             options.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
         });
-
+        
         builder.Services.Configure<UploadSettings>(builder.Configuration.GetSection(nameof(UploadSettings)));
 
         // Authentication cookie customization

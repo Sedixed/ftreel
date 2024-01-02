@@ -1,4 +1,5 @@
 ﻿using ftreel.Dto.category;
+using ftreel.Entities;
 using ftreel.Exceptions;
 using ftreel.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -43,16 +44,34 @@ public class CategoryController : Controller
             return BadRequest(e.Message);
         }
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetCategoryWithPath(string path)
+    {
+        try
+        {
+            var category = _categoryService.FindCategoryWithPath(path);
+            return Ok(new CategoryDTO(category));
+        }
+        catch (ObjectNotFoundException e)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 
     /**
      * Get all files.
      */
     [HttpGet]
-    public async Task<IActionResult> GetAllCategories()
+    public async Task<IActionResult> GetAllCategories(string path = "/")
     {
         try
         {
-            var categories = _categoryService.FindAllCategories();
+            var categories = _categoryService.FindAllCategories(path);
             IList<CategoryDTO> dtos = new List<CategoryDTO>();
             foreach (var category in categories)
             {
