@@ -2,10 +2,8 @@ using ftreel.Constants;
 using ftreel.DATA;
 using ftreel.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 using ftreel.Settings;
-using Microsoft.Identity.Client;
 
 internal class Program
 {
@@ -19,7 +17,7 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         var AnyOrigins = "_anyOrigin";
-        var Origin = builder.Configuration.GetConnectionString("Origin");
+        var origin = builder.Configuration.GetConnectionString("Origin");
 
         // Database
         builder.Services.AddDbContext<AppDBContext>(options =>
@@ -48,7 +46,7 @@ internal class Program
                 policy =>
                 {
                     policy
-                        .WithOrigins(Origin)
+                        .WithOrigins(origin)
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
@@ -62,6 +60,7 @@ internal class Program
         builder.Services.AddScoped<AuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<IDocumentService, DocumentService>();
         builder.Services.AddScoped<IStorageService, FileSystemStorageService>();
+        //builder.Services.AddScoped<ICategoryService, CategoryService>();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

@@ -72,10 +72,9 @@ public class DocumentService : IDocumentService
         Document document = new Document(
             uploadRequest.Title,
             uploadRequest.Description,
-            uploadRequest.FilePath,
-            uploadRequest.Extension,
+            uploadRequest.ContentType,
             uploadRequest.Author,
-            uploadRequest.Category,
+            null,
             uploadRequest.Base64
         );
         _dbContext.Add(document);
@@ -110,7 +109,6 @@ public class DocumentService : IDocumentService
         // If base 64 content has changed.
         if (updateRequest.Base64 != null && !updateRequest.Base64.Equals("") && document.Base64 != updateRequest.Base64)
         {
-            Console.WriteLine("uiuiuiuiuiuiuiuiuiuiuiuiuiuiuiuiuiuiuiuiui");
             // If file name has changed.
             if (updateRequest.Title != null && !updateRequest.Title.Equals("") && document.Title != updateRequest.Title) {
                 try
@@ -132,7 +130,6 @@ public class DocumentService : IDocumentService
         {
             // If file name has changed.
             if (updateRequest.Title != null && !updateRequest.Title.Equals("") && document.Title != updateRequest.Title) {
-                Console.WriteLine("owoowoowoowoowoowoowoowoowoowo");
                 try
                 {
                     _fileSystemStorageService.delete(document);
@@ -148,7 +145,6 @@ public class DocumentService : IDocumentService
             }
             else
             {
-                Console.WriteLine("zrjrzojnrzrzznrzzrrzlrz jrzlzrl");
                 PatchDocumentData(document, updateRequest);
                 _dbContext.SaveChanges();
             }
@@ -194,14 +190,9 @@ public class DocumentService : IDocumentService
             document.Description = updateRequest.Description;
         }
 
-        if (!IsAttributeNull(updateRequest.FilePath))
+        if (!IsAttributeNull(updateRequest.ContentType))
         {
-            document.FilePath = updateRequest.FilePath;
-        }
-
-        if (!IsAttributeNull(updateRequest.Extension))
-        {
-            document.Extension = updateRequest.Extension;
+            document.Extension = updateRequest.ContentType;
         }
 
         if (!IsAttributeNull(updateRequest.Author))

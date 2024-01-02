@@ -10,6 +10,7 @@ public class AppDBContext : DbContext
 
     public DbSet<Document> Documents { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,5 +26,15 @@ public class AppDBContext : DbContext
         modelBuilder.Entity<User>().Property(nameof(User.Roles))
             .HasConversion(splitStringConverter)
             .Metadata.SetValueComparer(stringListValueComparer);
+
+        modelBuilder.Entity<Category>()
+            .HasMany(c => c.ChildrenDocuments)
+            .WithOne(d => d.Category)
+            .HasForeignKey(d => d.CategoryId);
+
+        modelBuilder.Entity<Category>()
+            .HasMany(c => c.ChildrenCategories)
+            .WithOne(c => c.ParentCategory)
+            .HasForeignKey(c => c.ParentCategoryId);
     }
 }

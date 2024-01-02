@@ -8,10 +8,10 @@ public class Document
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public string FilePath { get; set; } = string.Empty;
     public string Extension { get; set; } = string.Empty;
     public string Author { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
+    public int? CategoryId { get; set; }
+    public Category? Category { get; set; }
     
     [NotMapped]
     public string Base64 { get; set; } = string.Empty;
@@ -20,19 +20,14 @@ public class Document
     {
     }
 
-    public Document(string title, string description, string filePath, string extension, string author, string category, string base64)
+    public Document(string title, string description, string extension, string author, Category? category, string base64)
     {
         Title = title;
         Description = description;
-        FilePath = filePath;
         Extension = extension;
         Author = author;
+        CategoryId = category?.Id;
         Category = category;
         Base64 = base64;
-    }
-
-    public override string ToString()
-    {
-        return Title;
     }
 }
