@@ -31,7 +31,7 @@ public class DocumentController : Controller
         try
         {
             var document = _documentService.FindDocument(id);
-            return Ok(document);
+            return Ok(new DocumentDTO(document));
         }
         catch (ObjectNotFoundException e)
         {
@@ -52,7 +52,13 @@ public class DocumentController : Controller
         try
         {
             var documents = _documentService.FindAllDocuments();
-            return Ok(documents);
+            IList<DocumentDTO> dtos = new List<DocumentDTO>();
+            foreach (var document in documents)
+            {
+                dtos.Add(new DocumentDTO(document));
+            }
+            
+            return Ok(dtos);
         }
         catch (Exception e)
         {
@@ -70,7 +76,7 @@ public class DocumentController : Controller
         {
             var document = _documentService.SaveDocument(request);
             _logger.LogInformation(request.Title + " file created.");
-            return Ok(document);
+            return Ok(new DocumentDTO(document));
         }
         catch (Exception e)
         {
@@ -89,7 +95,7 @@ public class DocumentController : Controller
         {
             var document = _documentService.UpdateDocument(id, request);
             _logger.LogInformation(request.Title + " file updated.");
-            return Ok(document);
+            return Ok(new DocumentDTO(document));
         }
         catch (ObjectNotFoundException e)
         {

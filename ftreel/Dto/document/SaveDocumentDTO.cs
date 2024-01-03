@@ -6,6 +6,7 @@ public class SaveDocumentDTO
     public string? Description { get; set; }
     public string? ContentType { get; set; }
     public string? Author { get; set; }
+    public int? CategoryId { get; set; }
     public string? Base64 { get; set; }
 
     public SaveDocumentDTO()

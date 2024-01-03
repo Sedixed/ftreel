@@ -54,14 +54,11 @@ public class CategoryService : ICategoryService
         var i = 1;
         foreach (var name in pathList)
         {
-            foreach (var category in categories)
+            foreach (var category in categories.Where(category => category.Name.Equals(name)))
             {
-                Console.WriteLine(category.Name);
-                if (category.Name.Equals(name)) {
-                    currentCategory = category;
-                    categories = (List<Category>) currentCategory.ChildrenCategories;
-                    break;
-                }
+                currentCategory = category;
+                categories = (List<Category>) currentCategory.ChildrenCategories;
+                break;
             }
 
             if (currentCategory != null)
@@ -186,7 +183,6 @@ public class CategoryService : ICategoryService
         var categoryParentCategory = category.ParentCategory;
         if (categoryParentCategory != null)
         {
-            Console.WriteLine("ui");
             categoryParentCategory.ChildrenCategories.Remove(category);
             category.ParentCategory = null;
             category.ParentCategoryId = null;
@@ -213,24 +209,17 @@ public class CategoryService : ICategoryService
         if (parentCategory == null)
         {
             var categories = _dbContext.Categories.Where(c => c.ParentCategory == null).ToList();
-            foreach (var categoryToCheck in categories)
+            if (categories.Any(categoryToCheck => categoryToCheck != null && categoryToCheck.Name.Equals(name)))
             {
-                if (categoryToCheck.Name.Equals(name))
-                {
-                    throw new Exception("Category with name '" + name + "' already exists in the parent category.");
-                }
+                throw new Exception("Category with name '" + name + "' already exists in the parent category.");
             }
         }
         else
         {
-            foreach (var categoryToCheck in parentCategory.ChildrenCategories)
+            if (parentCategory.ChildrenCategories.Any(categoryToCheck => categoryToCheck.Name.Equals(name)))
             {
-                if (categoryToCheck.Name.Equals(name))
-                {
-                    throw new Exception("Category with name '" + name + "' already exists in the parent category.");
-                }
+                throw new Exception("Category with name '" + name + "' already exists in the parent category.");
             }
-                
         }
     }
 }

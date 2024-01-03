@@ -69,7 +69,8 @@ public class DocumentService : IDocumentService
      */
     public Document SaveDocument(SaveDocumentDTO uploadRequest)
     {
-        Document document = new Document(
+        // Create the document.
+        var document = new Document(
             uploadRequest.Title,
             uploadRequest.Description,
             uploadRequest.ContentType,
@@ -77,9 +78,18 @@ public class DocumentService : IDocumentService
             null,
             uploadRequest.Base64
         );
+
+        // Associate to category.
+        var parentCategory = _dbContext.Categories.Find(uploadRequest.CategoryId);
+        CheckParentCategory(parentCategory, parentCategory?.Id, document.Title);
+        document.CategoryId = parentCategory?.Id;
+        document.Category = parentCategory;
+        
+        // Save in database.
         _dbContext.Add(document);
         _dbContext.SaveChanges();
         
+        // Save a system storage.
         _fileSystemStorageService.store(document);
 
         return document;
@@ -91,10 +101,30 @@ public class DocumentService : IDocumentService
     public Document UpdateDocument(int id, SaveDocumentDTO updateRequest)
     {
         var document = _dbContext.Documents.Find(id);
-
+        
         if (document == null)
         {
             throw new ObjectNotFoundException();
+        }
+        
+        // Update category.
+        if (updateRequest.CategoryId != null && document.CategoryId != updateRequest.CategoryId)
+        {
+            if (updateRequest.CategoryId <= 0)
+            {
+                if (document.CategoryId != null) {
+                    CheckParentCategory(null, null, document.Title);
+                    document.Category = null;
+                    document.CategoryId = null;
+                }
+            }
+            else
+            {
+                var parentCategory = _dbContext.Categories.Find(updateRequest.CategoryId);
+                CheckParentCategory(parentCategory, updateRequest.CategoryId, document.Title);
+                document.Category = parentCategory;
+                document.CategoryId = parentCategory?.Id;
+            }
         }
         
         try
@@ -208,6 +238,36 @@ public class DocumentService : IDocumentService
 
     private bool IsAttributeNull(string? attribute)
     {
-        return attribute == null || attribute.Equals("");
+        return attribute is null or "";
+    }
+    
+    
+    /**
+     * Private method to check if parent category is valid.
+     */
+    private void CheckParentCategory(Category? parentCategory, int? parentId, string name)
+    {
+        // If category parent does not exist.
+        if (parentId != null && parentCategory == null)
+        {
+            throw new Exception("Parent category with ID " + parentId + " Not found in database.");
+        }
+        
+        // Check parent parent or root category children document.
+        if (parentCategory == null)
+        {
+            var documents = _dbContext.Documents.Where(d => d.Category == null).ToList();
+            if (documents.Any(d => d.Title.Equals(name)))
+            {
+                throw new Exception("Document with name '" + name + "' already exists in the parent category.");
+            }
+        }
+        else
+        {
+            if (parentCategory.ChildrenDocuments.Any(d => d.Title.Equals(name)))
+            {
+                throw new Exception("Document with name '" + name + "' already exists in the parent category.");
+            }
+        }
     }
 }
