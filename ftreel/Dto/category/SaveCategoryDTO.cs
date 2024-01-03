@@ -2,7 +2,7 @@
 
 public class SaveCategoryDTO
 {
-    public string Name { get; set; } = "";
+    public string? Name { get; set; } = "";
 
     public int? ParentCategoryId { get; set; }
     

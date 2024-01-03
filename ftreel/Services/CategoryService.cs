@@ -98,37 +98,14 @@ public class CategoryService : ICategoryService
      */
     public Category? CreateCategory(SaveCategoryDTO createRequest)
     {
-        var parentCategory = _dbContext.Categories.Find(createRequest.ParentCategoryId);
+        if (createRequest.Name == null)
+        {
+            throw new Exception("Name of the category cannot be empty.");
+        }
 
-        // If category parent does not exist.
-        if (createRequest.ParentCategoryId != null && parentCategory == null)
-        {
-            throw new Exception("Parent category with ID " + createRequest.ParentCategoryId + " Not found in database.");
-        }
-        
-        // Check parent parent or root category children.
-        if (parentCategory == null)
-        {
-            var categories = _dbContext.Categories.Where(c => c.ParentCategory == null).ToList();
-            foreach (var categoryToCheck in categories)
-            {
-                if (categoryToCheck.Name.Equals(createRequest.Name))
-                {
-                    throw new Exception("Category with name '" + createRequest.Name + "' already exists in the parent category.");
-                }
-            }
-        }
-        else
-        {
-            foreach (var categoryToCheck in parentCategory.ChildrenCategories)
-            {
-                if (categoryToCheck.Name.Equals(createRequest.Name))
-                {
-                    throw new Exception("Category with name '" + createRequest.Name + "' already exists in the parent category.");
-                }
-            }
-                
-        }
+        var parentCategory = _dbContext.Categories.Find(createRequest.ParentCategoryId);
+        CheckParentCategory(parentCategory, parentCategory?
+            .Id, createRequest.Name);
 
         // Create category.
         var category = new Category
@@ -151,7 +128,37 @@ public class CategoryService : ICategoryService
      */
     public Category? UpdateCategory(int id, SaveCategoryDTO updateRequest)
     {
-        return null;
+        var category = _dbContext.Categories.Find(id);
+
+        if (category == null)
+        {
+            throw new ObjectNotFoundException();
+        }
+        
+        if (updateRequest.Name != null && !updateRequest.Name.Equals(""))
+        {
+            category.Name = updateRequest.Name;
+        }
+        
+        if (updateRequest.ParentCategoryId != null && category.ParentCategoryId != updateRequest.ParentCategoryId) {
+            if (updateRequest.ParentCategoryId <= 0)
+            {
+                if (category.ParentCategoryId != null) {
+                    CheckParentCategory(null, null, category.Name);
+                    category.ParentCategory = null;
+                    category.ParentCategoryId = null;
+                }
+            }
+            else
+            {
+                var parentCategory = _dbContext.Categories.Find(updateRequest.ParentCategoryId);
+                category.ParentCategory = parentCategory;
+                category.ParentCategoryId = parentCategory?.Id;
+            }
+        }
+
+        _dbContext.SaveChanges();
+        return category;
     }
 
     /**
@@ -188,5 +195,42 @@ public class CategoryService : ICategoryService
         
         _dbContext.Categories.Remove(category);
         _dbContext.SaveChanges();
-    } 
+    }
+
+
+    /**
+     * Private method to check if parent category is valid.
+     */
+    private void CheckParentCategory(Category? parentCategory, int? parentId, string name)
+    {
+        // If category parent does not exist.
+        if (parentId != null && parentCategory == null)
+        {
+            throw new Exception("Parent category with ID " + parentId + " Not found in database.");
+        }
+        
+        // Check parent parent or root category children.
+        if (parentCategory == null)
+        {
+            var categories = _dbContext.Categories.Where(c => c.ParentCategory == null).ToList();
+            foreach (var categoryToCheck in categories)
+            {
+                if (categoryToCheck.Name.Equals(name))
+                {
+                    throw new Exception("Category with name '" + name + "' already exists in the parent category.");
+                }
+            }
+        }
+        else
+        {
+            foreach (var categoryToCheck in parentCategory.ChildrenCategories)
+            {
+                if (categoryToCheck.Name.Equals(name))
+                {
+                    throw new Exception("Category with name '" + name + "' already exists in the parent category.");
+                }
+            }
+                
+        }
+    }
 }
