@@ -18,7 +18,7 @@ public interface ICategoryService
     /**
      * Find all categories.
      */
-    IList<Category?> FindAllCategories(string path);
+    IList<Category?> FindAllCategories();
 
     /**
      * Create a category.

@@ -46,7 +46,7 @@ public class CategoryController : Controller
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetCategoryWithPath(string path)
+    public async Task<IActionResult> GetCategoryWithPath(string path = "/")
     {
         try
         {
@@ -67,11 +67,11 @@ public class CategoryController : Controller
      * Get all files.
      */
     [HttpGet]
-    public async Task<IActionResult> GetAllCategories(string path = "/")
+    public async Task<IActionResult> GetAllCategories()
     {
         try
         {
-            var categories = _categoryService.FindAllCategories(path);
+            var categories = _categoryService.FindAllCategories();
             IList<CategoryDTO> dtos = new List<CategoryDTO>();
             foreach (var category in categories)
             {

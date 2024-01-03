@@ -16,6 +16,9 @@ public class CategoryService : ICategoryService
         _documentService = documentService;
     }
 
+    /**
+     * Find a category using its ID.
+     */
     public Category? FindCategory(int id)
     {
         var category = _dbContext.Categories.Find(id);
@@ -48,6 +51,7 @@ public class CategoryService : ICategoryService
         }
 
         Category? currentCategory = null;
+        var i = 1;
         foreach (var name in pathList)
         {
             foreach (var category in categories)
@@ -62,7 +66,14 @@ public class CategoryService : ICategoryService
 
             if (currentCategory != null)
             {
-                currentCategory = null;
+                if (i != pathList.Count) {
+                    i++;
+                    currentCategory = null;
+                }
+                else
+                {
+                    break;
+                }
             }
             else
             {
@@ -73,7 +84,10 @@ public class CategoryService : ICategoryService
         return currentCategory;
     }
 
-    public IList<Category?> FindAllCategories(string path)
+    /**
+     * Find all categories.
+     */
+    public IList<Category?> FindAllCategories()
     {
         var categories = _dbContext.Categories.ToList();
         return categories;
@@ -86,11 +100,37 @@ public class CategoryService : ICategoryService
     {
         var parentCategory = _dbContext.Categories.Find(createRequest.ParentCategoryId);
 
+        // If category parent does not exist.
         if (createRequest.ParentCategoryId != null && parentCategory == null)
         {
             throw new Exception("Parent category with ID " + createRequest.ParentCategoryId + " Not found in database.");
         }
         
+        // Check parent parent or root category children.
+        if (parentCategory == null)
+        {
+            var categories = _dbContext.Categories.Where(c => c.ParentCategory == null).ToList();
+            foreach (var categoryToCheck in categories)
+            {
+                if (categoryToCheck.Name.Equals(createRequest.Name))
+                {
+                    throw new Exception("Category with name '" + createRequest.Name + "' already exists in the parent category.");
+                }
+            }
+        }
+        else
+        {
+            foreach (var categoryToCheck in parentCategory.ChildrenCategories)
+            {
+                if (categoryToCheck.Name.Equals(createRequest.Name))
+                {
+                    throw new Exception("Category with name '" + createRequest.Name + "' already exists in the parent category.");
+                }
+            }
+                
+        }
+
+        // Create category.
         var category = new Category
         {
             Name = createRequest.Name,
@@ -98,22 +138,25 @@ public class CategoryService : ICategoryService
             ParentCategoryId = parentCategory?.Id
         };
 
-        if (parentCategory != null)
-        {
-            parentCategory.ChildrenCategories.Add(category);
-        }
-        
+        parentCategory?.ChildrenCategories.Add(category);
+
         _dbContext.Add(category);
         _dbContext.SaveChanges();
 
         return category;
     }
 
+    /**
+     * Update a category in database.
+     */
     public Category? UpdateCategory(int id, SaveCategoryDTO updateRequest)
     {
         return null;
     }
 
+    /**
+     * Delete a category in database.
+     */
     public void DeleteCategory(int id)
     {
         var category = _dbContext.Categories.Find(id);
