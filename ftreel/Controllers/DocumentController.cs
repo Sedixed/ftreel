@@ -1,7 +1,8 @@
-using ftreel.DATA;
+using ftreel.Annotations;
 using ftreel.Dto.document;
 using ftreel.Exceptions;
 using ftreel.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ftreel.Controllers;
@@ -10,6 +11,7 @@ namespace ftreel.Controllers;
  * Controller to manage documents.
  */
 [ApiController]
+[Authorize]
 [Route("[controller]/[action]")]
 public class DocumentController : Controller
 {
@@ -26,8 +28,9 @@ public class DocumentController : Controller
     /**
      * Get a file.
      */
+    //[CustomAuthorize]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetDocument(int id) {
+    public IActionResult GetDocument(int id) {
         try
         {
             var document = _documentService.FindDocument(id);
@@ -47,17 +50,14 @@ public class DocumentController : Controller
      * Get all files.
      */
     [HttpGet]
-    public async Task<IActionResult> GetAllDocuments()
+    //[CustomAuthorize(Roles="ROLE_ADMIN")]
+    public IActionResult GetAllDocuments()
     {
         try
         {
             var documents = _documentService.FindAllDocuments();
-            IList<DocumentDTO> dtos = new List<DocumentDTO>();
-            foreach (var document in documents)
-            {
-                dtos.Add(new DocumentDTO(document));
-            }
-            
+            IList<DocumentDTO> dtos = documents.Select(document => new DocumentDTO(document)).ToList();
+
             return Ok(dtos);
         }
         catch (Exception e)

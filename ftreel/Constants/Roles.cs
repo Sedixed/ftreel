@@ -1,8 +1,11 @@
-﻿namespace ftreel.Constants;
+﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
-public static class Roles
+namespace ftreel.Constants;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum Roles
 {
-    public static string ROLE_USER => "ROLE_USER";
-
-    public static string ROLE_ADMIN => "ROLE_ADMIN";
+    ROLE_USER,
+    ROLE_ADMIN
 }

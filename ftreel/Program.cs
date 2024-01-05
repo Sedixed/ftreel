@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ftreel.Constants;
 using ftreel.DATA;
 using ftreel.Services;
@@ -9,14 +10,14 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        /*var cookiePolicyOptions = new CookiePolicyOptions
+        var cookiePolicyOptions = new CookiePolicyOptions
         {
             MinimumSameSitePolicy = SameSiteMode.Strict,
-        };*/
+        };
 
         var builder = WebApplication.CreateBuilder(args);
 
-        var AnyOrigins = "_anyOrigin";
+        const string anyOrigins = "_anyOrigin";
         var origin = builder.Configuration.GetConnectionString("Origin");
 
         // Database
@@ -38,12 +39,15 @@ internal class Program
                 options.Cookie.HttpOnly = false;
                 options.Cookie.IsEssential = true;
                 options.Cookie.SameSite = SameSiteMode.Lax;
+                
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.SlidingExpiration = true;
             });
-
+        
         // Allow CORS
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy(name: AnyOrigins,
+            options.AddPolicy(name: anyOrigins,
                 policy =>
                 {
                     policy
@@ -65,7 +69,7 @@ internal class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
+        
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -77,10 +81,10 @@ internal class Program
 
         app.UseRouting();
 
-        app.UseCors(AnyOrigins);
+        app.UseCors(anyOrigins);
         app.UseAuthentication();
         app.UseAuthorization();
-        //app.UseCookiePolicy(cookiePolicyOptions);
+        app.UseCookiePolicy(cookiePolicyOptions);
 
         app.MapControllers();
         

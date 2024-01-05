@@ -86,10 +86,13 @@ public class AuthenticationController : Controller
 
         var claims = new List<Claim>
         {
+            // User data.
             new Claim(ClaimTypes.Name, user.Username),
             //new Claim("FullName", user.FullName),
-            new Claim(ClaimTypes.Role, Roles.ROLE_ADMIN),
         };
+        
+        // User roles.
+        if (user.Roles != null) claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var claimsIdentity = new ClaimsIdentity(
             claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -115,5 +118,5 @@ public class AuthenticationController : Controller
     /**
      * Register request containing a username, a password and a list of roles.
      */
-    public record RegisterRequest(string Username, string Password, IList<string> Roles);
+    public record RegisterRequest(string Username, string Password, IList<Roles> Roles);
 }

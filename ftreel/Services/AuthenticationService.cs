@@ -1,4 +1,5 @@
-﻿using ftreel.DATA;
+﻿using ftreel.Constants;
+using ftreel.DATA;
 using ftreel.Entities;
 using ftreel.Utils;
 
@@ -18,11 +19,8 @@ public class AuthenticationService
      */
     public User? AuthenticateUser(string username, string password)
     {
-        User? userDb = _dbContext.Users
+        var userDb = _dbContext.Users
             .FirstOrDefault(u => u.Username == username);
-
-        Console.WriteLine(password);
-        Console.WriteLine(PasswordManager.VerifyPassword(password, userDb.Password));
         
         if (userDb == null || !PasswordManager.VerifyPassword(password, userDb.Password))
         {
@@ -35,25 +33,24 @@ public class AuthenticationService
     /**
      * Register a new user that does not exist in database, and authenticate it.
      */
-    public User? RegisterUser(string username, string password, IList<string> roles)
+    public User? RegisterUser(string username, string password, IList<Roles> roles)
     {
-        User user = new User()
+        IList<string> rolesStr = roles.Select(role => role.ToString()).ToList();
+
+        var user = new User()
         {
             Username = username,
             Password = PasswordManager.HashPassword(password),
-            Roles = roles
+            Roles = rolesStr
         };
 
-        User? userDb = _dbContext.Users
+        var userDb = _dbContext.Users
             .FirstOrDefault(u => u.Username == username);
-        
-        if (userDb == null)
-        {
-            _dbContext.Add(user);
-            _dbContext.SaveChanges();
-            return AuthenticateUser(username, password);
-        }
 
-        return null;
+        if (userDb != null) return null;
+        
+        _dbContext.Add(user);
+        _dbContext.SaveChanges();
+        return AuthenticateUser(username, password);
     }
 }
