@@ -67,6 +67,7 @@ internal class Program
         builder.Services.AddControllers();
         builder.Services.AddHttpContextAccessor();
         // https://code-maze.com/dotnet-how-to-solve-unable-to-resolve-service-for-a-type/
+        builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<AuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<IDocumentService, DocumentService>();
         builder.Services.AddScoped<IStorageService, FileSystemStorageService>();
