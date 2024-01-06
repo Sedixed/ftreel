@@ -1,4 +1,3 @@
-using ftreel.Annotations;
 using ftreel.Dto.document;
 using ftreel.Exceptions;
 using ftreel.Services;
@@ -11,7 +10,6 @@ namespace ftreel.Controllers;
  * Controller to manage documents.
  */
 [ApiController]
-[Authorize]
 [Route("[controller]/[action]")]
 public class DocumentController : Controller
 {
@@ -30,6 +28,7 @@ public class DocumentController : Controller
      */
     //[CustomAuthorize]
     [HttpGet("{id:int}")]
+    //[Authorize]
     public IActionResult GetDocument(int id) {
         try
         {
@@ -50,7 +49,7 @@ public class DocumentController : Controller
      * Get all files.
      */
     [HttpGet]
-    //[CustomAuthorize(Roles="ROLE_ADMIN")]
+    //[Authorize(Roles="ROLE_ADMIN")]
     public IActionResult GetAllDocuments()
     {
         try

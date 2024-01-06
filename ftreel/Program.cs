@@ -1,10 +1,12 @@
-using System.Text.Json.Serialization;
+using System.Net;
 using ftreel.Constants;
 using ftreel.DATA;
 using ftreel.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using ftreel.Settings;
+using Microsoft.AspNetCore.Authentication;
+using AuthenticationService = ftreel.Services.AuthenticationService;
 
 internal class Program
 {
@@ -34,14 +36,17 @@ internal class Program
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
-                //options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-                //options.SlidingExpiration = true;
+                options.Cookie.Name = "AuthCookie";
                 options.Cookie.HttpOnly = false;
                 options.Cookie.IsEssential = true;
                 options.Cookie.SameSite = SameSiteMode.Lax;
                 
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 options.SlidingExpiration = true;
+                
+                // Prevent redirecting to login URL which will lead to 404 status code.
+                options.Events.OnRedirectToLogin = UnAuthorizedResponse;
+                options.Events.OnRedirectToAccessDenied = ForbiddenResponse;
             });
         
         // Allow CORS
@@ -93,5 +98,17 @@ internal class Program
             Directory.CreateDirectory(UploadPath.UPLOAD_FILE);
         
         app.Run();
+    }
+
+    private static Task UnAuthorizedResponse(RedirectContext<CookieAuthenticationOptions> context)
+    {
+        context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+        return Task.CompletedTask;
+    }
+    
+    private static Task ForbiddenResponse(RedirectContext<CookieAuthenticationOptions> context)
+    {
+        context.Response.StatusCode = (int) HttpStatusCode.Forbidden;
+        return Task.CompletedTask;
     }
 }
