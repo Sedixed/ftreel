@@ -20,7 +20,7 @@ public class AuthenticationService
     public User? AuthenticateUser(string username, string password)
     {
         var userDb = _dbContext.Users
-            .FirstOrDefault(u => u.Username == username);
+            .FirstOrDefault(u => u.Mail == username);
         
         if (userDb == null || !PasswordManager.VerifyPassword(password, userDb.Password))
         {
@@ -39,13 +39,13 @@ public class AuthenticationService
 
         var user = new User()
         {
-            Username = username,
+            Mail = username,
             Password = PasswordManager.HashPassword(password),
             Roles = rolesStr
         };
 
         var userDb = _dbContext.Users
-            .FirstOrDefault(u => u.Username == username);
+            .FirstOrDefault(u => u.Mail == username);
 
         if (userDb != null) return null;
         

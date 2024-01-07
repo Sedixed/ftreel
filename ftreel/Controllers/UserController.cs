@@ -1,5 +1,4 @@
-﻿using ftreel.Dto.document;
-using ftreel.Dto.user;
+﻿using ftreel.Dto.user;
 using ftreel.Exceptions;
 using ftreel.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +25,7 @@ public class UserController : Controller
     //[CustomAuthorize]
     [HttpGet("{id:int}")]
     //[Authorize]
-    public IActionResult GetDocument(int id) {
+    public IActionResult GetUser(int id) {
         try
         {
             var user = _userService.FindUser(id);
@@ -47,7 +46,7 @@ public class UserController : Controller
      */
     [HttpGet]
     //[Authorize(Roles="ROLE_ADMIN")]
-    public IActionResult GetAllDocuments()
+    public IActionResult GetAllUsers()
     {
         try
         {
@@ -85,7 +84,7 @@ public class UserController : Controller
      * Update a user.
      */
     [HttpPatch("{id:int}")]
-    public IActionResult UpdateDocument(int id, SaveUserDTO request) {
+    public IActionResult UpdateUser(int id, SaveUserDTO request) {
         try
         {
             var user = _userService.UpdateUser(id, request);
@@ -105,7 +104,7 @@ public class UserController : Controller
      * Delete a file.
      */
     [HttpDelete("{id:int}")]
-    public IActionResult DeleteDocument(int id) {
+    public IActionResult DeleteUser(int id) {
         try
         {
             _userService.DeleteUser(id);

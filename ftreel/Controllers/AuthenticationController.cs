@@ -87,7 +87,7 @@ public class AuthenticationController : Controller
         var claims = new List<Claim>
         {
             // User data.
-            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Name, user.Mail),
             //new Claim("FullName", user.FullName),
         };
         
@@ -105,7 +105,7 @@ public class AuthenticationController : Controller
             authProperties);
 
         _logger.LogInformation("User {username} logged in at {Time}.",
-            user.Username, DateTime.UtcNow);
+            user.Mail, DateTime.UtcNow);
         
         return Ok(Json(User.Identity?.Name));
     }
