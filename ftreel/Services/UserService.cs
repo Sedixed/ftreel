@@ -4,6 +4,7 @@ using ftreel.Dto.user;
 using ftreel.Entities;
 using ftreel.Exceptions;
 using ftreel.Utils;
+using Microsoft.AspNetCore.Identity;
 
 namespace ftreel.Services;
 
@@ -79,7 +80,16 @@ public class UserService : IUserService
      */
     public User UpdateUser(int id, SaveUserDTO updateRequest)
     {
-        throw new NotImplementedException();
+        var user = _dbContext.Users.Find(id);
+        if (user == null)
+        {
+            throw new ObjectNotFoundException();
+        }
+        
+        PatchUserData(user, updateRequest);
+        _dbContext.SaveChanges();
+        
+        return user;
     }
 
     /**
@@ -98,10 +108,46 @@ public class UserService : IUserService
     }
 
     /**
+     * Patch the data of the user.
+     */
+    private void PatchUserData(User user, SaveUserDTO updateRequest)
+    {
+        if (!IsAttributeNull(updateRequest.Mail))
+        {
+            // Check if the user has a well formed email.
+            if (!IsMailValid(updateRequest.Mail))
+            {
+                throw new Exception(updateRequest.Mail + " is not a valid email.");
+            }
+            // Check if user exists.
+            var userDb = _dbContext.Users.FirstOrDefault(u => u.Mail == updateRequest.Mail);
+            if (userDb != null) throw new Exception(updateRequest.Mail +" already exists.");
+
+            user.Mail = updateRequest.Mail;
+        }
+
+        if (!IsAttributeNull(updateRequest.Password))
+        {
+            user.Password = updateRequest.Password;
+        }
+
+        if (updateRequest.Roles is { Count: > 0 })
+        {
+            user.Roles = updateRequest.Roles;
+        }
+    }
+    
+    private static bool IsAttributeNull(string? attribute)
+    {
+        return attribute is null or "";
+    }
+
+    /**
      * Private method to check if an email address is valid.
      */
     private static bool IsMailValid(string email)
     {
         return new EmailAddressAttribute().IsValid(email);
+        
     }
 }
