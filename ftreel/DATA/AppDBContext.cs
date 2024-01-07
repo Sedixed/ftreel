@@ -1,4 +1,6 @@
+using ftreel.Constants;
 using ftreel.Entities;
+using ftreel.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -36,5 +38,29 @@ public class AppDBContext : DbContext
             .HasMany(c => c.ChildrenCategories)
             .WithOne(c => c.ParentCategory)
             .HasForeignKey(c => c.ParentCategoryId);
+        
+        // Insert users.
+        modelBuilder.Entity<User>().HasData(
+            new User
+            {
+                Id = 1,
+                Mail = "admin@ftreel.com",
+                Password = PasswordManager.HashPassword("admin"),
+                Roles = new List<string>()
+                {
+                    Roles.ROLE_ADMIN.ToString()
+                }
+            },
+            new User
+            {
+                Id = 2,
+                Mail = "user@ftreel.com",
+                Password = PasswordManager.HashPassword("user"),
+                Roles = new List<string>()
+                {
+                    Roles.ROLE_USER.ToString()
+                }
+            }
+        );
     }
 }
