@@ -28,7 +28,7 @@ public interface ICategoryService
     /**
      * Update an existing category.
      */
-    Category? UpdateCategory(int id, SaveCategoryDTO updateRequest);
+    Category? UpdateCategory(SaveCategoryDTO updateRequest);
 
      /**
       * Delete a category.

@@ -84,11 +84,11 @@ public class DocumentService : IDocumentService
         CheckParentCategory(parentCategory, parentCategory?.Id, document.Title);
         document.CategoryId = parentCategory?.Id;
         document.Category = parentCategory;
-        
+
         // Save in database.
         _dbContext.Add(document);
         _dbContext.SaveChanges();
-        
+
         // Save a system storage.
         _fileSystemStorageService.store(document);
 
@@ -98,9 +98,9 @@ public class DocumentService : IDocumentService
     /**
      * Update a file in database and in storage system.
      */
-    public Document UpdateDocument(int id, SaveDocumentDTO updateRequest)
+    public Document UpdateDocument(SaveDocumentDTO updateRequest)
     {
-        var document = _dbContext.Documents.Find(id);
+        var document = _dbContext.Documents.Find(updateRequest.Id);
         
         if (document == null)
         {

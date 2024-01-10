@@ -2,6 +2,7 @@
 
 public class SaveDocumentDTO
 {
+    public int? Id { get; set; }
     public string? Title { get; set; }
     public string? Description { get; set; }
     public string? ContentType { get; set; }
@@ -13,8 +14,9 @@ public class SaveDocumentDTO
     {
     }
 
-    public SaveDocumentDTO(string title, string description, string contentType, string author, string base64)
+    public SaveDocumentDTO(int id, string title, string description, string contentType, string author, string base64)
     {
+        Id = id;
         Title = title;
         Description = description;
         ContentType = contentType;

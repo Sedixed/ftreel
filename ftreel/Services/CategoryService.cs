@@ -123,9 +123,9 @@ public class CategoryService : ICategoryService
     /**
      * Update a category in database.
      */
-    public Category? UpdateCategory(int id, SaveCategoryDTO updateRequest)
+    public Category? UpdateCategory(SaveCategoryDTO updateRequest)
     {
-        var category = _dbContext.Categories.Find(id);
+        var category = _dbContext.Categories.Find(updateRequest.Id);
 
         if (category == null)
         {

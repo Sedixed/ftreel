@@ -78,9 +78,9 @@ public class UserService : IUserService
     /**
      * Update a user in database.
      */
-    public User UpdateUser(int id, SaveUserDTO updateRequest)
+    public User UpdateUser(SaveUserDTO updateRequest)
     {
-        var user = _dbContext.Users.Find(id);
+        var user = _dbContext.Users.Find(updateRequest.Id);
         if (user == null)
         {
             throw new ObjectNotFoundException();

@@ -2,6 +2,7 @@
 
 public class SaveCategoryDTO
 {
+    public int? Id { get; set; }
     public string? Name { get; set; } = "";
 
     public int? ParentCategoryId { get; set; }
@@ -9,8 +10,9 @@ public class SaveCategoryDTO
     public SaveCategoryDTO() {
     }
     
-    public SaveCategoryDTO(string name, int? parentCategoryId)
+    public SaveCategoryDTO(int id, string name, int? parentCategoryId)
     {
+        Id = id;
         Name = name;
         ParentCategoryId = parentCategoryId;
     }

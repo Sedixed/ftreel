@@ -88,11 +88,11 @@ public class DocumentController : Controller
     /**
      * Update a file.
      */
-    [HttpPatch("{id:int}")]
-    public async Task<IActionResult> UpdateDocument(int id, SaveDocumentDTO request) {
+    [HttpPatch]
+    public async Task<IActionResult> UpdateDocument(SaveDocumentDTO request) {
         try
         {
-            var document = _documentService.UpdateDocument(id, request);
+            var document = _documentService.UpdateDocument(request);
             _logger.LogInformation(request.Title + " file updated.");
             return Ok(new DocumentDTO(document));
         }

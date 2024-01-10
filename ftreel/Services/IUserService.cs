@@ -23,7 +23,7 @@ public interface IUserService
     /**
      * Update a user in database.
      */
-    User UpdateUser(int id, SaveUserDTO updateRequest);
+    User UpdateUser(SaveUserDTO updateRequest);
 
     /**
      * Delete a user using its ID.

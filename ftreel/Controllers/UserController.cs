@@ -83,11 +83,11 @@ public class UserController : Controller
     /**
      * Update a user.
      */
-    [HttpPatch("{id:int}")]
-    public IActionResult UpdateUser(int id, SaveUserDTO request) {
+    [HttpPatch]
+    public IActionResult UpdateUser(SaveUserDTO request) {
         try
         {
-            var user = _userService.UpdateUser(id, request);
+            var user = _userService.UpdateUser(request);
             return Ok(new UserDTO(user));
         }
         catch (ObjectNotFoundException e)

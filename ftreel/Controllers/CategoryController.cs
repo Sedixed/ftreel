@@ -105,11 +105,11 @@ public class CategoryController : Controller
     /**
      * Update a category.
      */
-    [HttpPatch("{id:int}")]
-    public async Task<IActionResult> UpdateCategory(int id, SaveCategoryDTO request) {
+    [HttpPatch]
+    public async Task<IActionResult> UpdateCategory(SaveCategoryDTO request) {
         try
         {
-            var category = _categoryService.UpdateCategory(id, request);
+            var category = _categoryService.UpdateCategory(request);
             return Ok(new CategoryDTO(category));
         }
         catch (ObjectNotFoundException e)
