@@ -1,4 +1,5 @@
-﻿using ftreel.Constants;
+﻿using System.Security.Principal;
+using ftreel.Constants;
 using ftreel.DATA;
 using ftreel.Entities;
 using ftreel.Utils;
@@ -29,6 +30,17 @@ public class AuthenticationService
         
         return userDb;
     }
+
+    /**
+     * Get the user currently authenticated.
+     */
+    public User? GetAuthenticatedUser(IIdentity? identity)
+    {
+        var userDb = _dbContext.Users
+            .FirstOrDefault(u => identity != null && u.Mail == identity.Name);
+
+        return userDb;
+    } 
 
     /**
      * Register a new user that does not exist in database, and authenticate it.
