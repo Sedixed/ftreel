@@ -1,4 +1,5 @@
-﻿using ftreel.Dto.document;
+﻿using System.Security.Principal;
+using ftreel.Dto.document;
 using ftreel.Entities;
 
 namespace ftreel.Services;
@@ -38,5 +39,5 @@ public interface IDocumentService
     /**
      * Validate a document.
      */
-    void ValidateDocument(int id);
+    void ValidateDocument(int id, IIdentity identity);
 }

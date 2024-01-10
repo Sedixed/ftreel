@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Security.Principal;
+using System.Text.RegularExpressions;
 using ftreel.DATA;
 using ftreel.Dto.document;
 using ftreel.Entities;
@@ -10,12 +11,14 @@ public class DocumentService : IDocumentService
 {
     private readonly ILogger _logger;
     private readonly IStorageService _fileSystemStorageService;
+    private readonly IMailService _mailService;
     private readonly AppDBContext _dbContext;
 
-    public DocumentService(ILogger<DocumentService> logger, IStorageService fileSystemStorageService, AppDBContext dbContext)
+    public DocumentService(ILogger<DocumentService> logger, IStorageService fileSystemStorageService, IMailService mailService, AppDBContext dbContext)
     {
         _logger = logger;
         _fileSystemStorageService = fileSystemStorageService;
+        _mailService = mailService;
         _dbContext = dbContext;
     }
 
@@ -253,7 +256,7 @@ public class DocumentService : IDocumentService
     /**
      * Validate a document.
      */
-    public void ValidateDocument(int id)
+    public void ValidateDocument(int id, IIdentity identity)
     {
         var document = _dbContext.Documents.Find(id);
 
@@ -270,6 +273,12 @@ public class DocumentService : IDocumentService
         else
         {
             throw new Exception("The document with ID " + document.Id + " is already validated.");
+        }
+
+        if (document.Category == null) return;
+        foreach (var user in document.Category.Followers)
+        {
+            _mailService.SendMail(user);
         }
     }
     

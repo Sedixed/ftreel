@@ -72,6 +72,7 @@ internal class Program
         builder.Services.AddScoped<IDocumentService, DocumentService>();
         builder.Services.AddScoped<IStorageService, FileSystemStorageService>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();
+        builder.Services.AddScoped<IMailService, MailService>();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

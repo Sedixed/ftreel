@@ -150,7 +150,7 @@ public class DocumentController : Controller
     public IActionResult ValidateDocument(int id) {
         try
         {
-            _documentService.ValidateDocument(id);
+            _documentService.ValidateDocument(id, User.Identity);
             return NoContent();
         }
         catch (ObjectNotFoundException e)
