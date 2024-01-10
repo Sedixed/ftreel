@@ -38,16 +38,19 @@ public class CategoryService : ICategoryService
     {
         IList<string> pathList = path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
         
+        // Root categories.
         List<Category> categories = _dbContext.Categories.Where(c => c.ParentCategory == null).ToList();
 
         if (pathList.Count == 0)
         {
-            var category = new Category
+            var documents = _dbContext.Documents.Where(d => d.Category == null).ToList();
+            var rootCategory = new Category
             {
                 Name = "/",
-                ChildrenCategories = categories
+                ChildrenCategories = categories,
+                ChildrenDocuments = documents
             };
-            return category;
+            return rootCategory;
         }
 
         Category? currentCategory = null;
