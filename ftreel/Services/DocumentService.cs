@@ -241,6 +241,41 @@ public class DocumentService : IDocumentService
         _dbContext.SaveChanges();
     }
 
+    /**
+     * Find all documents that are not validated.
+     */
+    public IList<Document> GetNotValidatedDocuments()
+    {
+        var documents = _dbContext.Documents.Where(d => d.IsValidated == false).ToList();
+        return documents;
+    }
+
+    /**
+     * Validate a document.
+     */
+    public void ValidateDocument(int id)
+    {
+        var document = _dbContext.Documents.Find(id);
+
+        if (document == null)
+        {
+            throw new ObjectNotFoundException();
+        }
+
+        if (!document.IsValidated)
+        {
+            document.IsValidated = true;
+            _dbContext.SaveChanges();
+        }
+        else
+        {
+            throw new Exception("The document with ID " + document.Id + " is already validated.");
+        }
+    }
+    
+    /**
+     * Patch all document data provided a SaveDocumentDTO.
+     */
     private void PatchDocumentData(Document document, SaveDocumentDTO updateRequest)
     {
         if (!IsAttributeNull(updateRequest.Title))

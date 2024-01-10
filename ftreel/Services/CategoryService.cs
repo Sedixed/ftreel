@@ -48,7 +48,7 @@ public class CategoryService : ICategoryService
 
         if (pathList.Count == 0)
         {
-            var documents = _dbContext.Documents.Where(d => d.Category == null).ToList();
+            var documents = _dbContext.Documents.Where(d => d.Category == null && d.IsValidated == true).ToList();
             var rootCategory = new Category
             {
                 Name = "/",
@@ -86,6 +86,13 @@ public class CategoryService : ICategoryService
             }
         }
 
+        foreach (var document in currentCategory?.ChildrenDocuments)
+        {
+            if (!document.IsValidated)
+            {
+                currentCategory.ChildrenDocuments.Remove(document);
+            }
+        }
         return currentCategory;
     }
 

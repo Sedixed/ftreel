@@ -29,4 +29,14 @@ public interface IDocumentService
      * Delete a file from database and storage system using its ID.
      */
     void DeleteDocument(int id);
+
+    /**
+     * Find all documents that are not validated.
+     */
+    IList<Document> GetNotValidatedDocuments();
+
+    /**
+     * Validate a document.
+     */
+    void ValidateDocument(int id);
 }

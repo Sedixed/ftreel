@@ -8,6 +8,7 @@ public class Document
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public bool IsValidated { get; set; } = false;
     public string ContentType { get; set; } = string.Empty;
     public string Author { get; set; } = string.Empty;
     public int? CategoryId { get; set; }

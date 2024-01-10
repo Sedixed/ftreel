@@ -126,4 +126,40 @@ public class DocumentController : Controller
             return BadRequest(e.Message);
         }
     }
+    
+    /**
+     * Get all document that are not validated
+     */
+    [HttpGet]
+    [Authorize(Roles = "ROLE_ADMIN")]
+    public IActionResult GetNotValidatedDocuments() {
+        try
+        {
+            var documents = _documentService.GetNotValidatedDocuments();
+            IList<DocumentDTO> dtos = documents.Select(document => new DocumentDTO(document)).ToList();
+            return Ok(dtos);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpPost("{id:int}")]
+    [Authorize(Roles = "ROLE_ADMIN")]
+    public IActionResult ValidateDocument(int id) {
+        try
+        {
+            _documentService.ValidateDocument(id);
+            return NoContent();
+        }
+        catch (ObjectNotFoundException e)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }
