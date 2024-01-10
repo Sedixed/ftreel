@@ -7,13 +7,15 @@ namespace ftreel.Services;
 
 public class CategoryService : ICategoryService
 {
+    private readonly ILogger _logger;
     private readonly AppDBContext _dbContext;
-    private readonly IDocumentService _documentService;
+    private readonly IStorageService _storageService;
 
-    public CategoryService(AppDBContext dbContext, IDocumentService documentService)
+    public CategoryService(ILogger<CategoryService> logger, AppDBContext dbContext, IStorageService storageService)
     {
+        _logger = logger;
         _dbContext = dbContext;
-        _documentService = documentService;
+        _storageService = storageService;
     }
 
     /**
@@ -173,29 +175,50 @@ public class CategoryService : ICategoryService
             throw new ObjectNotFoundException();
         }
 
-        foreach (var childrenCategory in category.ChildrenCategories)
+        DeleteCategoryAndChildrenRecursive(category);
+
+        // Remove category documents.
+        foreach (var document in category.ChildrenDocuments.ToList())
         {
-            DeleteCategory(childrenCategory.Id);
-        }
-        
-        foreach (var childrenDocument in category.ChildrenDocuments)
-        {
-            _documentService.DeleteDocument(childrenDocument.Id);
+            _dbContext.Documents.Remove(document);
+            try
+            {
+                _storageService.delete(document);
+            }
+            catch (StorageException e)
+            {
+                _logger.LogInformation(e.Message);
+            }
         }
 
-        var categoryParentCategory = category.ParentCategory;
-        if (categoryParentCategory != null)
-        {
-            categoryParentCategory.ChildrenCategories.Remove(category);
-            category.ParentCategory = null;
-            category.ParentCategoryId = null;
-
-        }
-        
         _dbContext.Categories.Remove(category);
+
         _dbContext.SaveChanges();
     }
 
+    private void DeleteCategoryAndChildrenRecursive(Category category)
+    {
+        foreach (var childCategory in category.ChildrenCategories.ToList())
+        {
+            // Call recursive method to delete all children.
+            DeleteCategoryAndChildrenRecursive(childCategory);
+            
+            foreach (var document in childCategory.ChildrenDocuments.ToList())
+            {
+                _dbContext.Documents.Remove(document);
+                try
+                {
+                    _storageService.delete(document);
+                }
+                catch (StorageException e)
+                {
+                    _logger.LogInformation(e.Message);
+                }
+            }
+
+            _dbContext.Categories.Remove(childCategory);
+        }
+    }
 
     /**
      * Private method to check if parent category is valid.
