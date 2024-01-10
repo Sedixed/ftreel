@@ -61,6 +61,6 @@ public class FileSystemStorageService : IStorageService
      */
     private static string GetFilePath(Document document)
     {
-        return UploadPath.UPLOAD_FILE + document.Title + "_" + document.Id + "." + document.Extension;
+        return UploadPath.UPLOAD_FILE + document.Title + "_" + document.Id;
     }
 }

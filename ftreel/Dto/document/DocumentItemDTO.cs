@@ -24,7 +24,7 @@ public class DocumentItemDTO
         Id = document.Id;
         Title = document.Title;
         Description = document.Description;
-        Extension = document.Extension;
+        Extension = document.ContentType;
         Author = document.Author;
     }
 }

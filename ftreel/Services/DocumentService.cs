@@ -1,4 +1,5 @@
-﻿using ftreel.DATA;
+﻿using System.Text.RegularExpressions;
+using ftreel.DATA;
 using ftreel.Dto.document;
 using ftreel.Entities;
 using ftreel.Exceptions;
@@ -73,11 +74,22 @@ public class DocumentService : IDocumentService
         var document = new Document(
             uploadRequest.Title,
             uploadRequest.Description,
-            uploadRequest.ContentType,
-            uploadRequest.Author,
             null,
-            uploadRequest.Base64
+            "",
+            null,
+            null
         );
+        
+        var match = Regex.Match(uploadRequest.Base64, @"data:(?<mime>[\w/\-]+);base64,(?<data>.+)");
+
+        if (match.Success)
+        {
+            var mimeTypeRequest = match.Groups["mime"].Value;
+            var base64DataRequest = match.Groups["data"].Value;
+
+            document.ContentType = mimeTypeRequest;
+            document.Base64 = base64DataRequest;
+        }
 
         // Associate to category.
         var parentCategory = _dbContext.Categories.Find(uploadRequest.CategoryId);
@@ -151,7 +163,7 @@ public class DocumentService : IDocumentService
             var oldDocument = new Document()
             {
                 Title = document.Title,
-                Extension = document.Extension
+                ContentType = document.ContentType
             };
             PatchDocumentData(document, updateRequest);
             try
@@ -241,19 +253,18 @@ public class DocumentService : IDocumentService
             document.Description = updateRequest.Description;
         }
 
-        if (!IsAttributeNull(updateRequest.ContentType))
-        {
-            document.Extension = updateRequest.ContentType;
-        }
-
-        if (!IsAttributeNull(updateRequest.Author))
-        {
-            document.Author = updateRequest.Author;
-        }
-
         if (!IsAttributeNull(updateRequest.Base64))
         {
-            document.Base64 = updateRequest.Base64;
+            var match = Regex.Match(updateRequest.Base64, @"data:(?<mime>[\w/\-]+);base64,(?<data>.+)");
+
+            if (match.Success)
+            {
+                var mimeTypeRequest = match.Groups["mime"].Value;
+                var base64DataRequest = match.Groups["data"].Value;
+
+                document.ContentType = mimeTypeRequest;
+                document.Base64 = base64DataRequest;
+            }
         }
     }
 
