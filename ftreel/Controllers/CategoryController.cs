@@ -1,4 +1,5 @@
 ﻿using ftreel.Dto.category;
+using ftreel.Dto.user;
 using ftreel.Entities;
 using ftreel.Exceptions;
 using ftreel.Services;
@@ -19,10 +20,13 @@ public class CategoryController : Controller
 
     private readonly ICategoryService _categoryService;
 
-    public CategoryController(ILogger<CategoryController> logger, ICategoryService categoryService)
+    private readonly AuthenticationService _authenticationService;
+
+    public CategoryController(ILogger<CategoryController> logger, ICategoryService categoryService, AuthenticationService authenticationService)
     {
         _logger = logger;
         _categoryService = categoryService;
+        _authenticationService = authenticationService;
     }
 
     /**
@@ -176,6 +180,28 @@ public class CategoryController : Controller
         {
             _categoryService.UnsubscribeCategory(id, User.Identity);
             return NoContent();
+        }
+        catch (ObjectNotFoundException e)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    /**
+     * Get followed categories of the current logged user.
+     */
+    [HttpGet]
+    [Authorize]
+    public IActionResult GetFollowedCategories()
+    {
+        try
+        {
+            var user = _authenticationService.GetAuthenticatedUser(User.Identity);
+            return Ok(new FollowedCategoriesDTO(user));
         }
         catch (ObjectNotFoundException e)
         {
