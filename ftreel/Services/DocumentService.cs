@@ -98,6 +98,7 @@ public class DocumentService : IDocumentService
         {
             _dbContext.Remove(document);
             _dbContext.SaveChanges();
+            throw new Exception("Invalid base 64 content.");
         }
 
         return document;
