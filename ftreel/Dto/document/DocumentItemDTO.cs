@@ -25,6 +25,6 @@ public class DocumentItemDTO
         Title = document.Title;
         Description = document.Description;
         Extension = document.ContentType;
-        Author = document.Author;
+        Author = document.Author?.Mail;
     }
 }

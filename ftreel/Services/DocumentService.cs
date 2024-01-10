@@ -12,13 +12,15 @@ public class DocumentService : IDocumentService
     private readonly ILogger _logger;
     private readonly IStorageService _fileSystemStorageService;
     private readonly IMailService _mailService;
+    private readonly AuthenticationService _authenticationService;
     private readonly AppDBContext _dbContext;
 
-    public DocumentService(ILogger<DocumentService> logger, IStorageService fileSystemStorageService, IMailService mailService, AppDBContext dbContext)
+    public DocumentService(ILogger<DocumentService> logger, IStorageService fileSystemStorageService, IMailService mailService, AuthenticationService authenticationService, AppDBContext dbContext)
     {
         _logger = logger;
         _fileSystemStorageService = fileSystemStorageService;
         _mailService = mailService;
+        _authenticationService = authenticationService;
         _dbContext = dbContext;
     }
 
@@ -71,14 +73,16 @@ public class DocumentService : IDocumentService
     /**
      * Create a file in database and in storage system.
      */
-    public Document SaveDocument(SaveDocumentDTO uploadRequest)
+    public Document SaveDocument(SaveDocumentDTO uploadRequest, IIdentity identity)
     {
+        var user = _authenticationService.GetAuthenticatedUser(identity);
+        
         // Create the document.
         var document = new Document(
             uploadRequest.Title,
             uploadRequest.Description,
             null,
-            "",
+            user,
             null,
             null
         );

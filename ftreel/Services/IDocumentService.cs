@@ -19,7 +19,7 @@ public interface IDocumentService
     /**
      * Create a file in database and in storage system.
      */
-    Document SaveDocument(SaveDocumentDTO createRequest);
+    Document SaveDocument(SaveDocumentDTO createRequest, IIdentity identity);
 
     /**
      * Update a file in database and in storage system.

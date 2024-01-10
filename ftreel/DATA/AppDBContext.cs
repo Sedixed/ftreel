@@ -42,6 +42,11 @@ public class AppDBContext : DbContext
         modelBuilder.Entity<User>()
             .HasMany(u => u.FollowedCategories)
             .WithMany(c => c.Followers);
+
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.CreatedDocuments)
+            .WithOne(d => d.Author)
+            .HasForeignKey(d => d.AuthorId);
         
         // Insert users.
         modelBuilder.Entity<User>().HasData(

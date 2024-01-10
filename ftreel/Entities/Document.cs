@@ -10,7 +10,8 @@ public class Document
     public string Description { get; set; } = string.Empty;
     public bool IsValidated { get; set; } = false;
     public string ContentType { get; set; } = string.Empty;
-    public string Author { get; set; } = string.Empty;
+    public int? AuthorId { get; set; }
+    public virtual User? Author { get; set; }
     public int? CategoryId { get; set; }
     public virtual Category? Category { get; set; }
     
@@ -21,11 +22,12 @@ public class Document
     {
     }
 
-    public Document(string title, string description, string contentType, string author, Category? category, string base64)
+    public Document(string title, string description, string contentType, User author, Category? category, string base64)
     {
         Title = title;
         Description = description;
         ContentType = contentType;
+        AuthorId = author.Id;
         Author = author;
         CategoryId = category?.Id;
         Base64 = base64;

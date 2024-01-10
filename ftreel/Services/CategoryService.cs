@@ -86,14 +86,49 @@ public class CategoryService : ICategoryService
             }
         }
 
-        foreach (var document in currentCategory?.ChildrenDocuments)
+        /*foreach (var document in currentCategory?.ChildrenDocuments)
         {
             if (!document.IsValidated)
             {
                 currentCategory.ChildrenDocuments.Remove(document);
             }
-        }
+        }*/
         return currentCategory;
+    }
+
+    /**
+     * Allow to filter documents from a category.
+     */
+    private void applyDocumentFilter(Category category, string filter, string value)
+    {
+        if (filter.Equals("title"))
+        {
+            foreach (var document in category.ChildrenDocuments)
+            {
+                if (!document.Title.Equals(value))
+                {
+                    category.ChildrenDocuments.Remove(document);
+                }
+            }
+        } else if (filter.Equals("description"))
+        {
+            foreach (var document in category.ChildrenDocuments)
+            {
+                if (!document.Description.Equals(value))
+                {
+                    category.ChildrenDocuments.Remove(document);
+                }
+            }
+        } else if (filter.Equals("author"))
+        {
+            foreach (var document in category.ChildrenDocuments)
+            {
+                if (!document.Title.Equals(value))
+                {
+                    category.ChildrenDocuments.Remove(document);
+                }
+            }
+        }
     }
 
     /**

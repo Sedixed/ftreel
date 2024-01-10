@@ -72,7 +72,7 @@ public class DocumentController : Controller
     {
         try
         {
-            var document = _documentService.SaveDocument(request);
+            var document = _documentService.SaveDocument(request, User.Identity);
             _logger.LogInformation(request.Title + " file created.");
             return Ok(new DocumentDTO(document));
         }

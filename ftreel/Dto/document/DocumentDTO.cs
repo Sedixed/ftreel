@@ -23,7 +23,7 @@ public class DocumentDTO
         Title = document.Title;
         Description = document.Description;
         ContentType = document.ContentType;
-        Author = document.Author;
+        Author = document.Author?.Mail;
         if (document.Category != null)
         {
             Category = new CategoryItemDTO(document.Category);

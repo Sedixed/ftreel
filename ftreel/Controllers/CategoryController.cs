@@ -52,7 +52,7 @@ public class CategoryController : Controller
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetCategoryWithPath(string path = "/")
+    public IActionResult GetCategoryWithPath(string path = "/", string filter = "")
     {
         try
         {

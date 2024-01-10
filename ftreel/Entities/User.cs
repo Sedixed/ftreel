@@ -14,4 +14,6 @@ public class User
     public IList<string>? Roles { get; set; } = new List<string>();
 
     public virtual IList<Category> FollowedCategories { get; set; } = new List<Category>();
+
+    public virtual IList<Document> CreatedDocuments { get; set; } = new List<Document>();
 }
