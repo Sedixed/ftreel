@@ -1,4 +1,5 @@
-﻿using ftreel.DATA;
+﻿using System.Security.Principal;
+using ftreel.DATA;
 using ftreel.Dto.category;
 using ftreel.Entities;
 using ftreel.Exceptions;
@@ -10,12 +11,14 @@ public class CategoryService : ICategoryService
     private readonly ILogger _logger;
     private readonly AppDBContext _dbContext;
     private readonly IStorageService _storageService;
+    private readonly AuthenticationService _authenticationService;
 
-    public CategoryService(ILogger<CategoryService> logger, AppDBContext dbContext, IStorageService storageService)
+    public CategoryService(ILogger<CategoryService> logger, AppDBContext dbContext, IStorageService storageService, AuthenticationService authenticationService)
     {
         _logger = logger;
         _dbContext = dbContext;
         _storageService = storageService;
+        _authenticationService = authenticationService;
     }
 
     /**
@@ -196,6 +199,56 @@ public class CategoryService : ICategoryService
         _dbContext.SaveChanges();
     }
 
+    /**
+    * Subscribe the current logged user to a category.
+    */
+    public void SubscribeCategory(int id, IIdentity? identity)
+    {
+        if (identity == null)
+        {
+            throw new Exception("No user authenticated.");
+        }
+        
+        var category = _dbContext.Categories.Find(id);
+
+        if (category == null)
+        {
+            throw new ObjectNotFoundException();
+        }
+
+        var user = _authenticationService.GetAuthenticatedUser(identity);
+        
+        category.Followers.Add(user);
+        user.FollowedCategories.Add(category);
+
+        _dbContext.SaveChanges();
+    }
+
+    /**
+     * Unsubscribe the current logged user from a category.
+     */
+    public void UnsubscribeCategory(int id, IIdentity? identity)
+    {
+        if (identity == null)
+        {
+            throw new Exception("No user authenticated.");
+        }
+        
+        var category = _dbContext.Categories.Find(id);
+
+        if (category == null)
+        {
+            throw new ObjectNotFoundException();
+        }
+        
+        var user = _authenticationService.GetAuthenticatedUser(identity);
+
+        user.FollowedCategories.Remove(category);
+        category.Followers.Remove(user);
+
+        _dbContext.SaveChanges();
+    }
+    
     private void DeleteCategoryAndChildrenRecursive(Category category)
     {
         foreach (var childCategory in category.ChildrenCategories.ToList())

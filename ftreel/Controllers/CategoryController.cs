@@ -2,6 +2,7 @@
 using ftreel.Entities;
 using ftreel.Exceptions;
 using ftreel.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -130,6 +131,50 @@ public class CategoryController : Controller
         try
         {
             _categoryService.DeleteCategory(id);
+            return NoContent();
+        }
+        catch (ObjectNotFoundException e)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    /**
+     * Subscribe current logged user.
+     */
+    [HttpPost("{id:int}")]
+    [Authorize]
+    public IActionResult SubscribeCategory(int id)
+    {
+        try
+        {
+            _categoryService.SubscribeCategory(id, User.Identity);
+            return NoContent();
+        }
+        catch (ObjectNotFoundException e)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    /**
+     * Unsubscribe current logged user.
+     */
+    [HttpPost("{id:int}")]
+    [Authorize]
+    public IActionResult UnsubscribeCategory(int id)
+    {
+        try
+        {
+            _categoryService.UnsubscribeCategory(id, User.Identity);
             return NoContent();
         }
         catch (ObjectNotFoundException e)

@@ -38,6 +38,10 @@ public class AppDBContext : DbContext
             .HasMany(c => c.ChildrenCategories)
             .WithOne(c => c.ParentCategory)
             .HasForeignKey(c => c.ParentCategoryId);
+
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.FollowedCategories)
+            .WithMany(c => c.Followers);
         
         // Insert users.
         modelBuilder.Entity<User>().HasData(

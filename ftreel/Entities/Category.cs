@@ -16,6 +16,8 @@ public class Category
     
     public virtual IList<Document> ChildrenDocuments { get; set; } = new List<Document>();
 
+    public virtual IList<User> Followers { get; set; } = new List<User>();
+
     public Category()
     {
     }
