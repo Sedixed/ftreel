@@ -1,11 +1,13 @@
 ﻿using ftreel.Dto.user;
 using ftreel.Exceptions;
 using ftreel.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ftreel.Controllers;
 
 [ApiController]
+[Authorize(Roles = "ROLE_ADMIN")]
 [Route("[controller]/[action]")]
 public class UserController : Controller
 {
@@ -22,9 +24,7 @@ public class UserController : Controller
     /**
      * Get a user.
      */
-    //[CustomAuthorize]
     [HttpGet("{id:int}")]
-    //[Authorize]
     public IActionResult GetUser(int id) {
         try
         {
@@ -45,7 +45,6 @@ public class UserController : Controller
      * Get all users.
      */
     [HttpGet]
-    //[Authorize(Roles="ROLE_ADMIN")]
     public IActionResult GetAllUsers()
     {
         try

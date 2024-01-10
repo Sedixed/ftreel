@@ -13,6 +13,7 @@ namespace ftreel.Controllers;
  * Controller to manage categories.
  */
 [ApiController]
+[Authorize]
 [Route("[controller]/[action]")]
 public class CategoryController : Controller
 {
@@ -94,6 +95,7 @@ public class CategoryController : Controller
      * Create a category.
      */
     [HttpPost]
+    [Authorize(Roles = "ROLE_ADMIN")]
     public async Task<IActionResult> CreateCategory(SaveCategoryDTO request)
     {
         try
@@ -111,6 +113,7 @@ public class CategoryController : Controller
      * Update a category.
      */
     [HttpPatch]
+    [Authorize(Roles = "ROLE_ADMIN")]
     public async Task<IActionResult> UpdateCategory(SaveCategoryDTO request) {
         try
         {
@@ -131,6 +134,7 @@ public class CategoryController : Controller
      * Delete a category.
      */
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "ROLE_ADMIN")]
     public async Task<IActionResult> DeleteCategory(int id) {
         try
         {
@@ -151,7 +155,6 @@ public class CategoryController : Controller
      * Subscribe current logged user.
      */
     [HttpPost("{id:int}")]
-    [Authorize]
     public IActionResult SubscribeCategory(int id)
     {
         try
@@ -173,7 +176,6 @@ public class CategoryController : Controller
      * Unsubscribe current logged user.
      */
     [HttpPost("{id:int}")]
-    [Authorize]
     public IActionResult UnsubscribeCategory(int id)
     {
         try
@@ -195,7 +197,6 @@ public class CategoryController : Controller
      * Get followed categories of the current logged user.
      */
     [HttpGet]
-    [Authorize]
     public IActionResult GetFollowedCategories()
     {
         try

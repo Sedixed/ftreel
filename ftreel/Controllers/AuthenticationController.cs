@@ -4,6 +4,7 @@ using ftreel.Dto.user;
 using ftreel.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using AuthenticationService = ftreel.Services.AuthenticationService;
@@ -42,6 +43,7 @@ public class AuthenticationController : Controller
      * Logout route.
      */
     [HttpPost]
+    [Authorize]
     public async void Logout()
     {
         _logger.LogInformation("User {Name} logged out at {Time}.", 
@@ -70,6 +72,7 @@ public class AuthenticationController : Controller
      * Get current user logged.
      */
     [HttpGet]
+    [Authorize]
     public IActionResult GetUser()
     {
         return Ok(new UserDTO(_authenticationService.GetAuthenticatedUser(User.Identity)));
@@ -78,6 +81,7 @@ public class AuthenticationController : Controller
     /**
      * Private function to sign in the user authenticated.
      */
+    
     private async Task<IActionResult> SignIn(User? user)
     {
         if (user == null)

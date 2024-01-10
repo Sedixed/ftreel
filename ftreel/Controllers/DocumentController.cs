@@ -10,6 +10,7 @@ namespace ftreel.Controllers;
  * Controller to manage documents.
  */
 [ApiController]
+[Authorize]
 [Route("[controller]/[action]")]
 public class DocumentController : Controller
 {
@@ -26,9 +27,7 @@ public class DocumentController : Controller
     /**
      * Get a file.
      */
-    //[CustomAuthorize]
     [HttpGet("{id:int}")]
-    //[Authorize]
     public IActionResult GetDocument(int id) {
         try
         {
@@ -49,7 +48,6 @@ public class DocumentController : Controller
      * Get all files.
      */
     [HttpGet]
-    //[Authorize(Roles="ROLE_ADMIN")]
     public IActionResult GetAllDocuments()
     {
         try
@@ -69,6 +67,7 @@ public class DocumentController : Controller
      * Upload a file.
      */
     [HttpPost]
+    [Authorize(Roles="ROLE_ADMIN")]
     public async Task<IActionResult> UploadDocument(SaveDocumentDTO request)
     {
         try
@@ -89,6 +88,7 @@ public class DocumentController : Controller
      * Update a file.
      */
     [HttpPatch]
+    [Authorize(Roles = "ROLE_ADMIN")]
     public async Task<IActionResult> UpdateDocument(SaveDocumentDTO request) {
         try
         {
@@ -110,6 +110,7 @@ public class DocumentController : Controller
      * Delete a file.
      */
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "ROLE_ADMIN")]
     public async Task<IActionResult> DeleteDocument(int id) {
         try
         {
