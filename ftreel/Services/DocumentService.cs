@@ -90,7 +90,16 @@ public class DocumentService : IDocumentService
         _dbContext.SaveChanges();
 
         // Save a system storage.
-        _fileSystemStorageService.store(document);
+        try
+        {
+            _fileSystemStorageService.store(document);
+        }
+        catch (Exception e)
+        {
+            _dbContext.Remove(document);
+            _dbContext.SaveChanges();
+            throw new Exception("Invalid base 64 content.");
+        }
 
         return document;
     }
@@ -139,22 +148,27 @@ public class DocumentService : IDocumentService
         // If base 64 content has changed.
         if (updateRequest.Base64 != null && !updateRequest.Base64.Equals("") && document.Base64 != updateRequest.Base64)
         {
-            // If file name has changed.
-            if (updateRequest.Title != null && !updateRequest.Title.Equals("") && document.Title != updateRequest.Title) {
-                try
-                {
-                    _fileSystemStorageService.delete(document);
-                }
-                catch (Exception e)
-                {
-                    _logger.LogInformation(e.Message);
-                }
-                Console.WriteLine("a");
-            }
-            
+            var oldDocument = new Document()
+            {
+                Title = document.Title,
+                Extension = document.Extension
+            };
             PatchDocumentData(document, updateRequest);
-            _fileSystemStorageService.store(document);
-            _dbContext.SaveChanges();
+            try
+            {
+                _fileSystemStorageService.store(document);
+                // If file name has changed.
+                if (updateRequest.Title != null && !updateRequest.Title.Equals("") && document.Title != updateRequest.Title)
+                {
+                    _fileSystemStorageService.delete(oldDocument);
+                }
+                _dbContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation(e.Message);
+                throw new Exception(e.Message);
+            }
         }
         else
         {
@@ -170,8 +184,15 @@ public class DocumentService : IDocumentService
                 }
                 
                 PatchDocumentData(document, updateRequest);
-                _fileSystemStorageService.store(document);
-                _dbContext.SaveChanges();
+                try
+                {
+                    _fileSystemStorageService.store(document);
+                    _dbContext.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.Message);
+                }
             }
             else
             {

@@ -44,7 +44,7 @@ namespace ftreel.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("ftreel.Entities.Document", b =>
@@ -78,7 +78,7 @@ namespace ftreel.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Documents");
+                    b.ToTable("Documents", (string)null);
                 });
 
             modelBuilder.Entity("ftreel.Entities.User", b =>
@@ -102,7 +102,7 @@ namespace ftreel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasData(
                         new

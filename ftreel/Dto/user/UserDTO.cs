@@ -8,10 +8,10 @@ public class UserDTO
     public string? Mail { get; set; }
     public IList<string>? Roles { get; set; }
 
-    public UserDTO(User user)
+    public UserDTO(User? user)
     {
-        Id = user.Id;
-        Mail = user.Mail;
-        Roles = user.Roles;
+        Id = user?.Id;
+        Mail = user?.Mail;
+        Roles = user?.Roles;
     }
 }
