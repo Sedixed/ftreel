@@ -12,4 +12,6 @@ public class User
     public string Password { get; set; } = "";
 
     public IList<string>? Roles { get; set; } = new List<string>();
+
+    public virtual IList<Category> FollowedCategories { get; set; } = new List<Category>();
 }

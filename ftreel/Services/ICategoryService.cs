@@ -1,4 +1,5 @@
-﻿using ftreel.Dto.category;
+﻿using System.Security.Principal;
+using ftreel.Dto.category;
 using ftreel.Entities;
 
 namespace ftreel.Services;
@@ -34,4 +35,14 @@ public interface ICategoryService
       * Delete a category.
       */
     void DeleteCategory(int id);
+
+     /**
+      * Subscribe the current logged user to a category.
+      */
+     void SubscribeCategory(int id, IIdentity? identity);
+
+     /**
+      * Unsubscribe the current logged user from a category.
+      */
+     void UnsubscribeCategory(int id, IIdentity? identity);
 }
