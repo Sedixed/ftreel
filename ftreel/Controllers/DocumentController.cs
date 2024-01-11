@@ -17,11 +17,14 @@ public class DocumentController : Controller
     private readonly ILogger _logger;
     
     private readonly IDocumentService _documentService;
+    
+    private readonly AuthenticationService _authenticationService;
 
-    public DocumentController(ILogger<DocumentController> logger, IDocumentService documentService)
+    public DocumentController(ILogger<DocumentController> logger, IDocumentService documentService, AuthenticationService authenticationService)
     {
         _logger = logger;
         _documentService = documentService;
+        _authenticationService = authenticationService;
     }
     
     /**
@@ -32,7 +35,7 @@ public class DocumentController : Controller
         try
         {
             var document = _documentService.FindDocument(id);
-            return Ok(new DocumentDTO(document));
+            return Ok(new DocumentDTO(document, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (ObjectNotFoundException e)
         {
@@ -53,7 +56,7 @@ public class DocumentController : Controller
         try
         {
             var documents = _documentService.FindAllDocuments();
-            IList<DocumentDTO> dtos = documents.Select(document => new DocumentDTO(document)).ToList();
+            IList<DocumentDTO> dtos = documents.Select(document => new DocumentDTO(document, _authenticationService.GetAuthenticatedUser(User.Identity))).ToList();
 
             return Ok(dtos);
         }
@@ -68,13 +71,13 @@ public class DocumentController : Controller
      */
     [HttpPost]
     //[Authorize(Roles="ROLE_ADMIN")]
-    public async Task<IActionResult> UploadDocument(SaveDocumentDTO request)
+    public IActionResult UploadDocument(SaveDocumentDTO request)
     {
         try
         {
             var document = _documentService.SaveDocument(request, User.Identity);
             _logger.LogInformation(request.Title + " file created.");
-            return Ok(new DocumentDTO(document));
+            return Ok(new DocumentDTO(document, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (Exception e)
         {
@@ -88,13 +91,13 @@ public class DocumentController : Controller
      * Update a file.
      */
     [HttpPatch]
-    [Authorize(Roles = "ROLE_ADMIN")]
-    public async Task<IActionResult> UpdateDocument(SaveDocumentDTO request) {
+    //[Authorize(Roles = "ROLE_ADMIN")]
+    public IActionResult UpdateDocument(SaveDocumentDTO request) {
         try
         {
             var document = _documentService.UpdateDocument(request);
             _logger.LogInformation(request.Title + " file updated.");
-            return Ok(new DocumentDTO(document));
+            return Ok(new DocumentDTO(document, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (ObjectNotFoundException e)
         {
@@ -111,7 +114,7 @@ public class DocumentController : Controller
      */
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "ROLE_ADMIN")]
-    public async Task<IActionResult> DeleteDocument(int id) {
+    public IActionResult DeleteDocument(int id) {
         try
         {
             _documentService.DeleteDocument(id);
@@ -136,7 +139,7 @@ public class DocumentController : Controller
         try
         {
             var documents = _documentService.GetNotValidatedDocuments();
-            IList<DocumentDTO> dtos = documents.Select(document => new DocumentDTO(document)).ToList();
+            IList<DocumentDTO> dtos = documents.Select(document => new DocumentDTO(document, _authenticationService.GetAuthenticatedUser(User.Identity))).ToList();
             return Ok(dtos);
         }
         catch (Exception e)
@@ -145,12 +148,55 @@ public class DocumentController : Controller
         }
     }
     
+    /**
+     * Validate a document.
+     */
     [HttpPost("{id:int}")]
     [Authorize(Roles = "ROLE_ADMIN")]
     public IActionResult ValidateDocument(int id) {
         try
         {
             _documentService.ValidateDocument(id, User.Identity);
+            return NoContent();
+        }
+        catch (ObjectNotFoundException e)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    /**
+     * Like a document.
+     */
+    [HttpPost("{id:int}")]
+    public IActionResult Like(int id) {
+        try
+        {
+            _documentService.LikeDocument(id, User.Identity);
+            return NoContent();
+        }
+        catch (ObjectNotFoundException e)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    /**
+     * Unlike a document.
+     */
+    [HttpPost("{id:int}")]
+    public IActionResult Unlike(int id) {
+        try
+        {
+            _documentService.UnlikeDocument(id, User.Identity);
             return NoContent();
         }
         catch (ObjectNotFoundException e)

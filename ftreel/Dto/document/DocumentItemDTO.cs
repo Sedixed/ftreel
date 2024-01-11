@@ -10,7 +10,27 @@ public class DocumentItemDTO
     public string Extension { get; set; }
     public string Author { get; set; }
     public string Path { get; set; }
+    public bool Liked { get; set; } = false;
+    public int NbLikes { get; set; } = 0;
 
+    public DocumentItemDTO(Document document, User currentLoggedUser)
+    {
+        Id = document.Id;
+        Title = document.Title;
+        Description = document.Description;
+        Extension = document.ContentType;
+        Author = document.Author?.Mail;
+        Path = document.GetPath();
+        foreach (var user in document.Likes)
+        {
+            if (currentLoggedUser != null && user.Id == currentLoggedUser.Id)
+            {
+                Liked = true;
+            }
+        }
+        NbLikes = document.Likes.Count;
+    }
+    
     public DocumentItemDTO(Document document)
     {
         Id = document.Id;
@@ -19,5 +39,6 @@ public class DocumentItemDTO
         Extension = document.ContentType;
         Author = document.Author?.Mail;
         Path = document.GetPath();
+        NbLikes = document.Likes.Count;
     }
 }

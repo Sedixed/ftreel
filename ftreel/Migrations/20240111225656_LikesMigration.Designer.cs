@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ftreel.DATA;
 
@@ -11,9 +12,11 @@ using ftreel.DATA;
 namespace ftreel.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240111225656_LikesMigration")]
+    partial class LikesMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,12 +48,12 @@ namespace ftreel.Migrations
                     b.Property<int>("LikedDocumentsId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LikesId")
+                    b.Property<int>("likesId")
                         .HasColumnType("int");
 
-                    b.HasKey("LikedDocumentsId", "LikesId");
+                    b.HasKey("LikedDocumentsId", "likesId");
 
-                    b.HasIndex("LikesId");
+                    b.HasIndex("likesId");
 
                     b.ToTable("DocumentUser");
                 });
@@ -143,14 +146,14 @@ namespace ftreel.Migrations
                         {
                             Id = 1,
                             Mail = "admin@ftreel.com",
-                            Password = "AH+n0ze8s+5RH6NX7yDkGjaloTG/dH7E9au/TGh3FHDtFs1PxEbLuBoKDsl7XNiFlA==",
+                            Password = "ANCFrki0f91MpTDt08v1E0/ElWZGhwYLkEn6lHl3v9bswUR1KEMQxFiZqL+1i2Y/Qg==",
                             Roles = "ROLE_ADMIN"
                         },
                         new
                         {
                             Id = 2,
                             Mail = "user@ftreel.com",
-                            Password = "AECgZchbnTYRA7OLtfittCaNVz0NhAB+Tx3m404BVXmmWPV752IQ9P/FxYeumKFqhQ==",
+                            Password = "AL56Dj4LKgrLzd/OgBzz6LzBarwGUYo9xSLBwiM1QUg9VLfrVxr+9AEmWHoyDLayqA==",
                             Roles = "ROLE_USER"
                         });
                 });
@@ -180,7 +183,7 @@ namespace ftreel.Migrations
 
                     b.HasOne("ftreel.Entities.User", null)
                         .WithMany()
-                        .HasForeignKey("LikesId")
+                        .HasForeignKey("likesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

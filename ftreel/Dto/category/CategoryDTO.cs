@@ -42,7 +42,7 @@ public class CategoryDTO
 
         foreach (var childDocument in category.ChildrenDocuments)
         {
-            ChildrenDocuments.Add(new DocumentItemDTO(childDocument));
+            ChildrenDocuments.Add(new DocumentItemDTO(childDocument, currentLoggedUser));
         }
     }
     
