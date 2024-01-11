@@ -8,18 +8,15 @@ public class CategoryItemDTO
 
     public string Name { get; set; }
 
+    public string Path { get; set; }
+    
     public bool Subscribed { get; set; } = false;
     
-    public CategoryItemDTO(int id, string name)
-    {
-        Id = id;
-        Name = name;
-    }
-
     public CategoryItemDTO(Category category, User? currentLoggedUser)
     {
         Id = category.Id;
         Name = category.Name;
+        Path = category.GetPath();
         foreach (var user in category.Followers)
         {
             if (currentLoggedUser != null && user.Id == currentLoggedUser.Id)
@@ -33,5 +30,6 @@ public class CategoryItemDTO
     {
         Id = category.Id;
         Name = category.Name;
+        Path = category.GetPath();
     }
 }

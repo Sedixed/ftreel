@@ -9,9 +9,8 @@ public class CategoryDTO
     public int Id { get; set; }
 
     public string Name { get; set; } = "";
-
+    public string Path { get; set; }
     public bool Subscribed { get; set; } = false;
-
     public int? ParentCategoryId { get; set; }
     public CategoryItemDTO? ParentCategory { get; set; }
 
@@ -19,18 +18,11 @@ public class CategoryDTO
     
     public IList<DocumentItemDTO> ChildrenDocuments { get; set; } = new List<DocumentItemDTO>();
 
-    public CategoryDTO(int id, string name, int? parentCategoryId, CategoryItemDTO? parentCategory)
-    {
-        Id = id;
-        Name = name;
-        ParentCategoryId = parentCategoryId;
-        ParentCategory = parentCategory;
-    }
-
     public CategoryDTO(Category? category, User? currentLoggedUser)
     {
         Id = category.Id;
         Name = category.Name;
+        Path = category.GetPath();
         
         foreach (var user in category.Followers)
         {
@@ -58,6 +50,7 @@ public class CategoryDTO
     {
         Id = category.Id;
         Name = category.Name;
+        Path = category.GetPath();
         ParentCategoryId = category.ParentCategoryId;
         if (category.ParentCategory != null) ParentCategory = new CategoryItemDTO(category.ParentCategory);
         

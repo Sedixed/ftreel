@@ -9,15 +9,7 @@ public class DocumentItemDTO
     public string Description { get; set; }
     public string Extension { get; set; }
     public string Author { get; set; }
-
-    public DocumentItemDTO(int id, string title, string description, string extension, string author)
-    {
-        Id = id;
-        Title = title;
-        Description = description;
-        Extension = extension;
-        Author = author;
-    }
+    public string Path { get; set; }
 
     public DocumentItemDTO(Document document)
     {
@@ -26,5 +18,6 @@ public class DocumentItemDTO
         Description = document.Description;
         Extension = document.ContentType;
         Author = document.Author?.Mail;
+        Path = document.GetPath();
     }
 }

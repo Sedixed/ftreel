@@ -27,4 +27,23 @@ public class Category
         Name = name;
         ParentCategoryId = parentCategory?.Id;
     }
+    
+    public string GetPath()
+    {
+        if (ParentCategory == null)
+        {
+            return "/" + Name;
+        }
+        return GetPathRecursive(ParentCategory) + "/" + Name;
+    }
+
+    private string GetPathRecursive(Category category)
+    {
+        if (category.ParentCategory == null)
+        {
+            return "/" + category.Name;
+        }
+
+        return GetPathRecursive(category.ParentCategory) + "/" + category.Name;
+    }
 }

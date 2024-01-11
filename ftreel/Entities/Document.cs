@@ -32,4 +32,23 @@ public class Document
         CategoryId = category?.Id;
         Base64 = base64;
     }
+
+    public string GetPath()
+    {
+        if (Category == null)
+        {
+            return "/" + Title;
+        }
+        return GetPathRecursive(Category) + "/" + Title;
+    }
+
+    private string GetPathRecursive(Category category)
+    {
+        if (category.ParentCategory == null)
+        {
+            return "/" + category.Name;
+        }
+
+        return GetPathRecursive(category.ParentCategory) + "/" + category.Name;
+    }
 }

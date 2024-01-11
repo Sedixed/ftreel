@@ -10,6 +10,7 @@ public class DocumentDTO
     public string Description { get; set; } = string.Empty;
     public string ContentType { get; set; } = string.Empty;
     public string Author { get; set; } = string.Empty;
+    public string Path { get; set; }
     public CategoryItemDTO? Category { get; set; }
     public string Base64 { get; set; } = string.Empty;
 
@@ -24,6 +25,7 @@ public class DocumentDTO
         Description = document.Description;
         ContentType = document.ContentType;
         Author = document.Author?.Mail;
+        Path = document.GetPath();
         if (document.Category != null)
         {
             Category = new CategoryItemDTO(document.Category);
