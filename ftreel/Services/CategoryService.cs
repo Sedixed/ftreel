@@ -49,7 +49,7 @@ public class CategoryService : ICategoryService
 
         if (pathList.Count == 0)
         {
-            var documents = _dbContext.Documents.Where(d => d.Category == null /*&& d.IsValidated == true*/).ToList();
+            var documents = _dbContext.Documents.Where(d => d.Category == null && d.IsValidated == true).ToList();
             var rootCategory = new Category
             {
                 Name = "/",
@@ -90,12 +90,12 @@ public class CategoryService : ICategoryService
         }
         
         // Filter by document validated.
-        /*var documentsToRemove = currentCategory?.ChildrenDocuments.Where(document => !document.IsValidated).ToList();
+        var documentsToRemove = currentCategory?.ChildrenDocuments.Where(document => !document.IsValidated).ToList();
         
         foreach (var document in documentsToRemove)
         {
             currentCategory.ChildrenDocuments.Remove(document);
-        }*/
+        }
         
         ApplyDocumentFilter(currentCategory, filter, value);
         
