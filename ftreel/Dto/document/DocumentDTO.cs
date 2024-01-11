@@ -11,6 +11,8 @@ public class DocumentDTO
     public string ContentType { get; set; } = string.Empty;
     public string Author { get; set; } = string.Empty;
     public string Path { get; set; }
+    public bool Liked { get; set; } = false;
+    public int NbLikes { get; set; } = 0;
     public CategoryItemDTO? Category { get; set; }
     public string Base64 { get; set; } = string.Empty;
 
@@ -18,7 +20,7 @@ public class DocumentDTO
     {
     }
 
-    public DocumentDTO(Document document)
+    public DocumentDTO(Document document, User? currentLoggedUser)
     {
         Id = document.Id;
         Title = document.Title;
@@ -26,6 +28,14 @@ public class DocumentDTO
         ContentType = document.ContentType;
         Author = document.Author?.Mail;
         Path = document.GetPath();
+        foreach (var user in document.Likes)
+        {
+            if (currentLoggedUser != null && user.Id == currentLoggedUser.Id)
+            {
+                Liked = true;
+            }
+        }
+        NbLikes = document.Likes.Count;
         if (document.Category != null)
         {
             Category = new CategoryItemDTO(document.Category);

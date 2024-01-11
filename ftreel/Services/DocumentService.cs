@@ -285,6 +285,46 @@ public class DocumentService : IDocumentService
             _mailService.SendMail(user);
         }
     }
+
+    /**
+     * Like a document.
+     */
+    public void LikeDocument(int id, IIdentity identity)
+    {
+        var document = _dbContext.Documents.Find(id);
+
+        if (document == null)
+        {
+            throw new ObjectNotFoundException();
+        }
+
+        var user = _authenticationService.GetAuthenticatedUser(identity);
+        
+        user.LikedDocuments.Add(document);
+        document.Likes.Add(user);
+
+        _dbContext.SaveChanges();
+    }
+
+    /**
+     * Unlike a document.
+     */
+    public void UnlikeDocument(int id, IIdentity identity)
+    {
+        var document = _dbContext.Documents.Find(id);
+
+        if (document == null)
+        {
+            throw new ObjectNotFoundException();
+        }
+        
+        var user = _authenticationService.GetAuthenticatedUser(identity);
+        
+        user.LikedDocuments.Remove(document);
+        document.Likes.Remove(user);
+
+        _dbContext.SaveChanges();
+    }
     
     /**
      * Patch all document data provided a SaveDocumentDTO.

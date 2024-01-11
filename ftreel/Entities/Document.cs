@@ -12,6 +12,9 @@ public class Document
     public string ContentType { get; set; } = string.Empty;
     public int? AuthorId { get; set; }
     public virtual User? Author { get; set; }
+
+    public virtual IList<User> Likes { get; set; } = new List<User>();
+        
     public int? CategoryId { get; set; }
     public virtual Category? Category { get; set; }
     

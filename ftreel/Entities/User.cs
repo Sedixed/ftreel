@@ -16,4 +16,6 @@ public class User
     public virtual IList<Category> FollowedCategories { get; set; } = new List<Category>();
 
     public virtual IList<Document> CreatedDocuments { get; set; } = new List<Document>();
+
+    public virtual IList<Document> LikedDocuments { get; set; } = new List<Document>();
 }

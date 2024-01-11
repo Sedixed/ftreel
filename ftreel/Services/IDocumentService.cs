@@ -40,4 +40,14 @@ public interface IDocumentService
      * Validate a document.
      */
     void ValidateDocument(int id, IIdentity identity);
+
+    /**
+     * Like a document.
+     */
+    void LikeDocument(int id, IIdentity identity);
+
+    /**
+     * Unlike a document.
+     */
+    void UnlikeDocument(int id, IIdentity identity);
 }
