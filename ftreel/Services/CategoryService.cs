@@ -91,7 +91,7 @@ public class CategoryService : ICategoryService
         }
         
         // Filter by document validated.
-        var documentsToRemove = currentCategory?.ChildrenDocuments.Where(document => !document.IsValidated || document.Author.Id != user.Id).ToList();
+        var documentsToRemove = currentCategory?.ChildrenDocuments.Where(document => !document.IsValidated && document.Author.Id != user.Id).ToList();
         
         foreach (var document in documentsToRemove)
         {
