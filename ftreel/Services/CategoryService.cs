@@ -56,6 +56,8 @@ public class CategoryService : ICategoryService
                 ChildrenCategories = categories,
                 ChildrenDocuments = documents
             };
+            
+            ApplyDocumentFilter(rootCategory, filter, value);
             return rootCategory;
         }
 
