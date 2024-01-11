@@ -19,7 +19,7 @@ public class MailService : IMailService
         var smtpPort = 1025;
         
         var subject = "Nouveau document";
-        var body = "Bonjour,\n\n Un document a été ajouté dans une catégorie où vous êtes abonnés.\n\n FTREEL";
+        var body = "Bonjour,\n\nUn document a été ajouté dans une catégorie où vous êtes abonnés.\n\nFTREEL";
         
         var mailMessage = new MailMessage(SystemMail.FTREEL_SYSTEM_MAIL, user.Mail, subject, body);
         var smtpClient = new SmtpClient(smtpServer, smtpPort);

@@ -67,7 +67,7 @@ public class DocumentController : Controller
      * Upload a file.
      */
     [HttpPost]
-    [Authorize(Roles="ROLE_ADMIN")]
+    [Authorize]
     public async Task<IActionResult> UploadDocument(SaveDocumentDTO request)
     {
         try
