@@ -3,6 +3,7 @@ using ftreel.DATA;
 using ftreel.Dto.category;
 using ftreel.Entities;
 using ftreel.Exceptions;
+using Document = System.Reflection.Metadata.Document;
 
 namespace ftreel.Services;
 
@@ -39,7 +40,7 @@ public class CategoryService : ICategoryService
     /**
      * Find a category using its path.
      */
-    public Category? FindCategoryWithPath(string path)
+    public Category? FindCategoryWithPath(string path, string filter, string value)
     {
         IList<string> pathList = path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
         
@@ -85,48 +86,56 @@ public class CategoryService : ICategoryService
                 throw new ObjectNotFoundException();
             }
         }
-
-        /*foreach (var document in currentCategory?.ChildrenDocuments)
+        
+        // Filter by document validated.
+        /*var documentsToRemove = currentCategory?.ChildrenDocuments.Where(document => !document.IsValidated).ToList();
+        
+        foreach (var document in documentsToRemove)
         {
-            if (!document.IsValidated)
-            {
-                currentCategory.ChildrenDocuments.Remove(document);
-            }
+            currentCategory.ChildrenDocuments.Remove(document);
         }*/
+        
+        ApplyDocumentFilter(currentCategory, filter, value);
+        
         return currentCategory;
     }
 
     /**
      * Allow to filter documents from a category.
      */
-    private void applyDocumentFilter(Category category, string filter, string value)
+    private void ApplyDocumentFilter(Category category, string filter, string value)
     {
-        if (filter.Equals("title"))
+        switch (filter)
         {
-            foreach (var document in category.ChildrenDocuments)
+            case "title":
             {
-                if (!document.Title.Equals(value))
+                var documentsToRemove = category.ChildrenDocuments.Where(document => !document.Title.Contains(value)).ToList();
+                foreach (var document in documentsToRemove)
                 {
                     category.ChildrenDocuments.Remove(document);
                 }
+
+                break;
             }
-        } else if (filter.Equals("description"))
-        {
-            foreach (var document in category.ChildrenDocuments)
+            case "description":
             {
-                if (!document.Description.Equals(value))
+                var documentsToRemove = category.ChildrenDocuments.Where(document => !document.Description.Contains(value)).ToList();
+                foreach (var document in documentsToRemove)
                 {
                     category.ChildrenDocuments.Remove(document);
                 }
+
+                break;
             }
-        } else if (filter.Equals("author"))
-        {
-            foreach (var document in category.ChildrenDocuments)
+            case "author":
             {
-                if (!document.Title.Equals(value))
+                var documentsToRemove = category.ChildrenDocuments.Where(document => document.Author != null && !document.Author.Mail.Contains(value)).ToList();
+                foreach (var document in documentsToRemove)
                 {
                     category.ChildrenDocuments.Remove(document);
                 }
+
+                break;
             }
         }
     }

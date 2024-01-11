@@ -52,11 +52,11 @@ public class CategoryController : Controller
     }
     
     [HttpGet]
-    public IActionResult GetCategoryWithPath(string path = "/", string filter = "")
+    public IActionResult GetCategoryWithPath(string path = "/", string filter = "", string value = "")
     {
         try
         {
-            var category = _categoryService.FindCategoryWithPath(path);
+            var category = _categoryService.FindCategoryWithPath(path, filter, value);
             return Ok(new CategoryDTO(category));
         }
         catch (ObjectNotFoundException e)
