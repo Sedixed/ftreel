@@ -10,6 +10,8 @@ public class CategoryDTO
 
     public string Name { get; set; } = "";
 
+    public bool Subscribed { get; set; } = false;
+
     public int? ParentCategoryId { get; set; }
     public CategoryItemDTO? ParentCategory { get; set; }
 
@@ -25,6 +27,33 @@ public class CategoryDTO
         ParentCategory = parentCategory;
     }
 
+    public CategoryDTO(Category? category, User? currentLoggedUser)
+    {
+        Id = category.Id;
+        Name = category.Name;
+        
+        foreach (var user in category.Followers)
+        {
+            if (currentLoggedUser != null && user.Id == currentLoggedUser.Id)
+            {
+                Subscribed = true;
+            }
+        }
+        
+        ParentCategoryId = category.ParentCategoryId;
+        if (category.ParentCategory != null) ParentCategory = new CategoryItemDTO(category.ParentCategory);
+        
+        foreach (var childCategory in category.ChildrenCategories)
+        {
+            ChildrenCategories.Add(new CategoryItemDTO(childCategory, currentLoggedUser));
+        }
+
+        foreach (var childDocument in category.ChildrenDocuments)
+        {
+            ChildrenDocuments.Add(new DocumentItemDTO(childDocument));
+        }
+    }
+    
     public CategoryDTO(Category? category)
     {
         Id = category.Id;

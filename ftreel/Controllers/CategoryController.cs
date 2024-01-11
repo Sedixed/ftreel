@@ -34,12 +34,12 @@ public class CategoryController : Controller
      * Get a file.
      */
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetCategory(int id)
+    public IActionResult GetCategory(int id)
     {
         try
         {
             var category = _categoryService.FindCategory(id);
-            return Ok(new CategoryDTO(category));
+            return Ok(new CategoryDTO(category, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (ObjectNotFoundException e)
         {
@@ -57,7 +57,7 @@ public class CategoryController : Controller
         try
         {
             var category = _categoryService.FindCategoryWithPath(path, filter, value);
-            return Ok(new CategoryDTO(category));
+            return Ok(new CategoryDTO(category, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (ObjectNotFoundException e)
         {
@@ -73,7 +73,7 @@ public class CategoryController : Controller
      * Get all files.
      */
     [HttpGet]
-    public async Task<IActionResult> GetAllCategories()
+    public IActionResult GetAllCategories()
     {
         try
         {
@@ -81,7 +81,7 @@ public class CategoryController : Controller
             IList<CategoryDTO> dtos = new List<CategoryDTO>();
             foreach (var category in categories)
             {
-                dtos.Add(new CategoryDTO(category));
+                dtos.Add(new CategoryDTO(category, _authenticationService.GetAuthenticatedUser(User.Identity)));
             }
             return Ok(dtos);
         }
@@ -96,12 +96,12 @@ public class CategoryController : Controller
      */
     [HttpPost]
     [Authorize(Roles = "ROLE_ADMIN")]
-    public async Task<IActionResult> CreateCategory(SaveCategoryDTO request)
+    public IActionResult CreateCategory(SaveCategoryDTO request)
     {
         try
         {
             var category = _categoryService.CreateCategory(request);
-            return Ok(new CategoryDTO(category));
+            return Ok(new CategoryDTO(category, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (Exception e)
         {
@@ -114,11 +114,11 @@ public class CategoryController : Controller
      */
     [HttpPatch]
     [Authorize(Roles = "ROLE_ADMIN")]
-    public async Task<IActionResult> UpdateCategory(SaveCategoryDTO request) {
+    public IActionResult UpdateCategory(SaveCategoryDTO request) {
         try
         {
             var category = _categoryService.UpdateCategory(request);
-            return Ok(new CategoryDTO(category));
+            return Ok(new CategoryDTO(category, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (ObjectNotFoundException e)
         {
@@ -135,7 +135,7 @@ public class CategoryController : Controller
      */
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "ROLE_ADMIN")]
-    public async Task<IActionResult> DeleteCategory(int id) {
+    public IActionResult DeleteCategory(int id) {
         try
         {
             _categoryService.DeleteCategory(id);
