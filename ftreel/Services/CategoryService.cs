@@ -49,7 +49,7 @@ public class CategoryService : ICategoryService
 
         if (pathList.Count == 0)
         {
-            var documents = _dbContext.Documents.Where(d => d.Category == null && d.IsValidated == true).ToList();
+            var documents = _dbContext.Documents.Where(d => d.Category == null /*&& d.IsValidated == true*/).ToList();
             var rootCategory = new Category
             {
                 Name = "/",
