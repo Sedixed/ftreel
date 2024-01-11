@@ -40,8 +40,9 @@ public class CategoryService : ICategoryService
     /**
      * Find a category using its path.
      */
-    public Category? FindCategoryWithPath(string path, string filter, string value)
+    public Category? FindCategoryWithPath(string path, string filter, string value, IIdentity identity)
     {
+        var user = _authenticationService.GetAuthenticatedUser(identity);
         IList<string> pathList = path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
         
         // Root categories.
@@ -49,7 +50,7 @@ public class CategoryService : ICategoryService
 
         if (pathList.Count == 0)
         {
-            var documents = _dbContext.Documents.Where(d => d.Category == null && d.IsValidated == true).ToList();
+            var documents = _dbContext.Documents.Where(d => d.Category == null && (d.IsValidated == true || d.Author.Id == user.Id)).ToList();
             var rootCategory = new Category
             {
                 Name = "/",
@@ -90,7 +91,7 @@ public class CategoryService : ICategoryService
         }
         
         // Filter by document validated.
-        var documentsToRemove = currentCategory?.ChildrenDocuments.Where(document => !document.IsValidated).ToList();
+        var documentsToRemove = currentCategory?.ChildrenDocuments.Where(document => !document.IsValidated || document.Author.Id != user.Id).ToList();
         
         foreach (var document in documentsToRemove)
         {

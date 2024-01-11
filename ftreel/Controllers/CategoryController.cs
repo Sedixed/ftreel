@@ -56,7 +56,7 @@ public class CategoryController : Controller
     {
         try
         {
-            var category = _categoryService.FindCategoryWithPath(path, filter, value);
+            var category = _categoryService.FindCategoryWithPath(path, filter, value, User.Identity);
             return Ok(new CategoryDTO(category, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (ObjectNotFoundException e)

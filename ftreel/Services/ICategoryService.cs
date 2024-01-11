@@ -14,7 +14,7 @@ public interface ICategoryService
     /**
      * Find a category using its path.
      */
-    Category? FindCategoryWithPath(string path, string filter, string value);
+    Category? FindCategoryWithPath(string path, string filter, string value, IIdentity identity);
     
     /**
      * Find all categories.
