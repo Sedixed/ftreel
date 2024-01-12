@@ -36,6 +36,8 @@ public class DocumentController : Controller
         try
         {
             var document = _documentService.FindDocument(id);
+            _logger.LogInformation("Document {Title} retrieved with ID at {Time} by user {User}.", 
+                document.Title, DateTime.UtcNow, User.Identity?.Name);
             return Ok(new DocumentDTO(document, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (ObjectNotFoundException e)
@@ -57,6 +59,8 @@ public class DocumentController : Controller
         try
         {
             var documents = _documentService.FindAllDocuments();
+            _logger.LogInformation("All documents retrieved at {Time} by user {User}.", 
+                DateTime.UtcNow, User.Identity?.Name);
             IList<DocumentDTO> dtos = documents.Select(document => new DocumentDTO(document, _authenticationService.GetAuthenticatedUser(User.Identity))).ToList();
 
             return Ok(dtos);
@@ -77,7 +81,8 @@ public class DocumentController : Controller
         try
         {
             var document = _documentService.SaveDocument(request, User.Identity);
-            _logger.LogInformation(request.Title + " file created.");
+            _logger.LogInformation("Document {Title} created at {Time} by user {User}.", 
+                document.Title, DateTime.UtcNow, User.Identity?.Name);
             return Ok(new DocumentDTO(document, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (Exception e)
@@ -97,7 +102,8 @@ public class DocumentController : Controller
         try
         {
             var document = _documentService.UpdateDocument(request);
-            _logger.LogInformation(request.Title + " file updated.");
+            _logger.LogInformation("Document {Title} updated at {Time} by user {User}.", 
+                document.Title, DateTime.UtcNow, User.Identity?.Name);
             return Ok(new DocumentDTO(document, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (ObjectNotFoundException e)
@@ -119,6 +125,8 @@ public class DocumentController : Controller
         try
         {
             _documentService.DeleteDocument(id);
+            _logger.LogInformation("Document with ID {Id} deleted at {Time} by user {User}.", 
+                id, DateTime.UtcNow, User.Identity?.Name);
             return NoContent();
         }
         catch (ObjectNotFoundException e)
@@ -141,6 +149,8 @@ public class DocumentController : Controller
         {
             var documents = _documentService.GetNotValidatedDocuments();
             IList<DocumentDTO> dtos = documents.Select(document => new DocumentDTO(document, _authenticationService.GetAuthenticatedUser(User.Identity))).ToList();
+            _logger.LogInformation("All documents not validated retrieved at {Time} by user {User}.", 
+                DateTime.UtcNow, User.Identity?.Name);
             return Ok(dtos);
         }
         catch (Exception e)
@@ -158,6 +168,8 @@ public class DocumentController : Controller
         try
         {
             _documentService.ValidateDocument(id, User.Identity);
+            _logger.LogInformation("Document with ID {Id} validated at {Time} by user {User}.", 
+                id, DateTime.UtcNow, User.Identity?.Name);
             return NoContent();
         }
         catch (ObjectNotFoundException e)
@@ -178,6 +190,8 @@ public class DocumentController : Controller
         try
         {
             _documentService.LikeDocument(id, User.Identity);
+            _logger.LogInformation("Document with ID {Id} liked at {Time} by user {User}.", 
+                id, DateTime.UtcNow, User.Identity?.Name);
             return NoContent();
         }
         catch (ObjectNotFoundException e)
@@ -198,6 +212,8 @@ public class DocumentController : Controller
         try
         {
             _documentService.UnlikeDocument(id, User.Identity);
+            _logger.LogInformation("Document with ID {Id} unliked at {Time} by user {User}.", 
+                id, DateTime.UtcNow, User.Identity?.Name);
             return NoContent();
         }
         catch (ObjectNotFoundException e)

@@ -1,10 +1,8 @@
 ﻿using ftreel.Dto.category;
 using ftreel.Dto.user;
-using ftreel.Entities;
 using ftreel.Exceptions;
 using ftreel.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ftreel.Dto.error;
 
@@ -40,6 +38,8 @@ public class CategoryController : Controller
         try
         {
             var category = _categoryService.FindCategory(id);
+            _logger.LogInformation("Category {Name} retrieved with ID at {Time} by user {User}.", 
+                category.Name, DateTime.UtcNow, User.Identity?.Name);
             return Ok(new CategoryDTO(category, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (ObjectNotFoundException e)
@@ -58,6 +58,8 @@ public class CategoryController : Controller
         try
         {
             var category = _categoryService.FindCategoryWithPath(path, filter, value, User.Identity);
+            _logger.LogInformation("Category {Name} retrieved with path at {Time} by user {User}.", 
+                category.Name, DateTime.UtcNow, User.Identity?.Name);
             return Ok(new CategoryDTO(category, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (ObjectNotFoundException e)
@@ -79,6 +81,8 @@ public class CategoryController : Controller
         try
         {
             var categories = _categoryService.FindAllCategories();
+            _logger.LogInformation("All categories retrieved at {Time} by user {User}.", 
+                DateTime.UtcNow, User.Identity?.Name);
             IList<CategoryDTO> dtos = new List<CategoryDTO>();
             foreach (var category in categories)
             {
@@ -102,6 +106,8 @@ public class CategoryController : Controller
         try
         {
             var category = _categoryService.CreateCategory(request);
+            _logger.LogInformation("Category {Name} created at {Time} by user {User}.", 
+                category.Name, DateTime.UtcNow, User.Identity?.Name);
             return Ok(new CategoryDTO(category, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (Exception e)
@@ -119,6 +125,8 @@ public class CategoryController : Controller
         try
         {
             var category = _categoryService.UpdateCategory(request);
+            _logger.LogInformation("Category {Name} updated at {Time} by user {User}.", 
+                category.Name, DateTime.UtcNow, User.Identity?.Name);
             return Ok(new CategoryDTO(category, _authenticationService.GetAuthenticatedUser(User.Identity)));
         }
         catch (ObjectNotFoundException e)
@@ -140,6 +148,8 @@ public class CategoryController : Controller
         try
         {
             _categoryService.DeleteCategory(id);
+            _logger.LogInformation("Category with ID {Id} deleted at {Time} by user {User}.", 
+                id, DateTime.UtcNow, User.Identity?.Name);
             return NoContent();
         }
         catch (ObjectNotFoundException e)
@@ -161,6 +171,8 @@ public class CategoryController : Controller
         try
         {
             _categoryService.SubscribeCategory(id, User.Identity);
+            _logger.LogInformation("User {User} subscribed to category with ID {Id} at {Time}.", 
+                User.Identity?.Name, id, DateTime.UtcNow);
             return NoContent();
         }
         catch (ObjectNotFoundException e)
@@ -182,6 +194,8 @@ public class CategoryController : Controller
         try
         {
             _categoryService.UnsubscribeCategory(id, User.Identity);
+            _logger.LogInformation("User {User} unsubscribed to category with ID {Id} at {Time}.", 
+                User.Identity?.Name, id, DateTime.UtcNow);
             return NoContent();
         }
         catch (ObjectNotFoundException e)
@@ -203,6 +217,8 @@ public class CategoryController : Controller
         try
         {
             var user = _authenticationService.GetAuthenticatedUser(User.Identity);
+            _logger.LogInformation("All followed categories of user {User} retrieved at {Time}.", 
+                User.Identity?.Name, DateTime.UtcNow);
             return Ok(new FollowedCategoriesDTO(user));
         }
         catch (ObjectNotFoundException e)

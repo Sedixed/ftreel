@@ -30,6 +30,8 @@ public class UserController : Controller
         try
         {
             var user = _userService.FindUser(id);
+            _logger.LogInformation("User {Mail} retrieved with ID at {Time}.", 
+                user.Mail, DateTime.UtcNow);
             return Ok(new UserDTO(user));
         }
         catch (ObjectNotFoundException e)
@@ -51,6 +53,8 @@ public class UserController : Controller
         try
         {
             var users = _userService.FindAllUser();
+            _logger.LogInformation("All users retrieved at {Time}.", 
+                DateTime.UtcNow);
             IList<UserDTO> dtos = users.Select(user => new UserDTO(user)).ToList();
 
             return Ok(dtos);
@@ -70,6 +74,8 @@ public class UserController : Controller
         try
         {
             var user = _userService.CreateUser(request);
+            _logger.LogInformation("User {Mail} created at {Time}.", 
+                user.Mail, DateTime.UtcNow);
             return Ok(new UserDTO(user));
         }
         catch (Exception e)
@@ -88,6 +94,8 @@ public class UserController : Controller
         try
         {
             var user = _userService.UpdateUser(request);
+            _logger.LogInformation("User {Mail} updated at {Time} by user {User}.", 
+                user.Mail, DateTime.UtcNow, User.Identity?.Name);
             return Ok(new UserDTO(user));
         }
         catch (ObjectNotFoundException e)
@@ -108,6 +116,8 @@ public class UserController : Controller
         try
         {
             _userService.DeleteUser(id);
+            _logger.LogInformation("User with ID {Id} deleted at {Time} by user {User}.", 
+                id, DateTime.UtcNow, User.Identity?.Name);
             return NoContent();
         }
         catch (ObjectNotFoundException e)

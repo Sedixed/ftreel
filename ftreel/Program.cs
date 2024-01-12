@@ -25,7 +25,6 @@ internal class Program
         // Database
         builder.Services.AddDbContext<AppDBContext>(options =>
         {
-            var a = builder.Configuration.GetConnectionString("Database");
             options.UseLazyLoadingProxies();
             options.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
         });
@@ -102,6 +101,7 @@ internal class Program
         app.Run();
     }
 
+    
     private static Task UnAuthorizedResponse(RedirectContext<CookieAuthenticationOptions> context)
     {
         context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
