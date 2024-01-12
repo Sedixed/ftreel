@@ -121,7 +121,7 @@ public class UserService : IUserService
             }
             // Check if user exists.
             var userDb = _dbContext.Users.FirstOrDefault(u => u.Mail == updateRequest.Mail);
-            if (userDb != null) throw new Exception(updateRequest.Mail +" already exists.");
+            if (userDb != null && updateRequest.Mail != user.Mail) throw new Exception(updateRequest.Mail +" already exists.");
 
             user.Mail = updateRequest.Mail;
         }
