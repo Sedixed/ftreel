@@ -97,7 +97,6 @@ public class DocumentController : Controller
      * Update a file.
      */
     [HttpPatch]
-    //[Authorize(Roles = "ROLE_ADMIN")]
     public IActionResult UpdateDocument(SaveDocumentDTO request) {
         try
         {
