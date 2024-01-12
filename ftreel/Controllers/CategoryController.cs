@@ -6,6 +6,7 @@ using ftreel.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ftreel.Dto.error;
 
 namespace ftreel.Controllers;
 
@@ -47,7 +48,7 @@ public class CategoryController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
     
@@ -65,7 +66,7 @@ public class CategoryController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
 
@@ -87,7 +88,7 @@ public class CategoryController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
     
@@ -105,7 +106,7 @@ public class CategoryController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
     
@@ -126,7 +127,7 @@ public class CategoryController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
     
@@ -147,7 +148,7 @@ public class CategoryController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
 
@@ -168,7 +169,7 @@ public class CategoryController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
     
@@ -189,7 +190,7 @@ public class CategoryController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
 
@@ -210,7 +211,7 @@ public class CategoryController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
 }

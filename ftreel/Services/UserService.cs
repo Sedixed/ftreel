@@ -5,6 +5,7 @@ using ftreel.Entities;
 using ftreel.Exceptions;
 using ftreel.Utils;
 using Microsoft.AspNetCore.Identity;
+using ftreel.Dto.error;
 
 namespace ftreel.Services;
 

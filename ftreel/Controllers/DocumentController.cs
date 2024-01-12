@@ -3,6 +3,7 @@ using ftreel.Exceptions;
 using ftreel.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ftreel.Dto.error;
 
 namespace ftreel.Controllers;
 
@@ -43,7 +44,7 @@ public class DocumentController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
 
@@ -62,7 +63,7 @@ public class DocumentController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
     
@@ -81,7 +82,7 @@ public class DocumentController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
 
@@ -105,7 +106,7 @@ public class DocumentController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
     
@@ -126,7 +127,7 @@ public class DocumentController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
     
@@ -144,7 +145,7 @@ public class DocumentController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
     
@@ -165,7 +166,7 @@ public class DocumentController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
     
@@ -185,7 +186,7 @@ public class DocumentController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
     
@@ -205,7 +206,7 @@ public class DocumentController : Controller
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new ErrorDTO(e.Message));
         }
     }
 }

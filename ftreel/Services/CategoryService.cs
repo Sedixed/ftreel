@@ -4,6 +4,7 @@ using ftreel.Dto.category;
 using ftreel.Entities;
 using ftreel.Exceptions;
 using Document = System.Reflection.Metadata.Document;
+using ftreel.Dto.error;
 
 namespace ftreel.Services;
 

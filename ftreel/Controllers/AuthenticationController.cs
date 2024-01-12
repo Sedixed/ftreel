@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using AuthenticationService = ftreel.Services.AuthenticationService;
+using ftreel.Dto.error;
 
 namespace ftreel.Controllers;
 

@@ -1,6 +1,7 @@
 ﻿using System.Net.Mail;
 using ftreel.Constants;
 using ftreel.Entities;
+using ftreel.Dto.error;
 
 namespace ftreel.Services;
 

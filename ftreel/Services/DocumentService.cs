@@ -4,6 +4,9 @@ using ftreel.DATA;
 using ftreel.Dto.document;
 using ftreel.Entities;
 using ftreel.Exceptions;
+using ftreel.Constants;
+using Microsoft.OpenApi.Extensions;
+using ftreel.Dto.error;
 
 namespace ftreel.Services;
 
@@ -103,6 +106,11 @@ public class DocumentService : IDocumentService
         CheckParentCategory(parentCategory, parentCategory?.Id, document.Title);
         document.CategoryId = parentCategory?.Id;
         document.Category = parentCategory;
+
+        if (user.Roles.Contains(Roles.ROLE_ADMIN.ToString()))
+        {
+            document.IsValidated = true;
+        }
 
         // Save in database.
         _dbContext.Add(document);

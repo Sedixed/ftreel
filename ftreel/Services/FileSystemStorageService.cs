@@ -1,6 +1,7 @@
 ﻿using ftreel.Constants;
 using ftreel.Entities;
 using ftreel.Exceptions;
+using ftreel.Dto.error;
 
 namespace ftreel.Services;
 

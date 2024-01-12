@@ -3,6 +3,7 @@ using ftreel.Constants;
 using ftreel.DATA;
 using ftreel.Entities;
 using ftreel.Utils;
+using ftreel.Dto.error;
 
 namespace ftreel.Services;
 
