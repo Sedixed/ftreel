@@ -4,6 +4,8 @@ using ftreel.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ftreel.Dto.error;
+using ftreel.Entities;
+using ftreel.Utils;
 
 namespace ftreel.Controllers;
 
@@ -223,5 +225,28 @@ public class DocumentController : Controller
         {
             return BadRequest(new ErrorDTO(e.Message));
         }
+    }
+
+    [HttpGet]
+    [Authorize(Roles = "ROLE_ADMIN")]
+    public IActionResult GetMailTemplate()
+    {
+        var singleton = MailSingleton.GetInstanceMailSingleton();
+        var result = new {
+            subject = singleton.Subject, 
+            body = singleton.Body
+        };
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "ROLE_ADMIN")]
+    public IActionResult SetMailTemplate(string customSubject, string customBody)
+    {
+        var singleton = MailSingleton.GetInstanceMailSingleton();
+        singleton.Subject = customSubject;
+        singleton.Body = customBody;
+        singleton.ReplacePlaceHolders();
+        return Ok("Custom mail set");
     }
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Web;
 
 namespace ftreel.Entities;
 
@@ -43,6 +44,20 @@ public class Document
             return "/" + Title;
         }
         return GetPathRecursive(Category) + "/" + Title;
+    }
+
+    public string GetDocumentUrl()
+    {
+        // Implement logic to get the URL based on the hierarchical path
+        var hierarchicalPath = GetPath();
+        var baseUrl = "http://localhost:5173/files";
+
+        // Split the hierarchical path by '/'
+        var pathSegments = hierarchicalPath.Split('/');
+
+        // Remove the last segment from the path
+        var pathWithoutLastSegment = string.Join("/", pathSegments.Take(pathSegments.Length - 1));
+        return $"{baseUrl}?path={HttpUtility.UrlEncode(pathWithoutLastSegment)}";
     }
 
     private string GetPathRecursive(Category category)

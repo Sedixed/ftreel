@@ -2,6 +2,7 @@
 using ftreel.Constants;
 using ftreel.Entities;
 using ftreel.Dto.error;
+using ftreel.Utils;
 
 namespace ftreel.Services;
 
@@ -18,13 +19,13 @@ public class MailService : IMailService
     {
         var smtpServer = "localhost";
         var smtpPort = 1025;
-        
-        var subject = "Nouveau document";
-        var body = "Bonjour,\n\nLe document " + document.Title 
-            + " a été ajouté dans la catégorie " 
-            + document.Category.Name + " où vous êtes abonné.\n\nFTREEL";
-        
-        var mailMessage = new MailMessage(SystemMail.FTREEL_SYSTEM_MAIL, user.Mail, subject, body);
+
+        var mailSingleton = MailSingleton.GetInstanceMailSingleton();
+        mailSingleton.Document = document;
+        mailSingleton.ReplacePlaceHolders();
+
+        var mailMessage = new MailMessage(SystemMail.FTREEL_SYSTEM_MAIL, user.Mail,
+            mailSingleton.Subject, mailSingleton.Body);
         var smtpClient = new SmtpClient(smtpServer, smtpPort);
         
         try
