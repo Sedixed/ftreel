@@ -5,5 +5,5 @@ namespace ftreel.Services;
 
 public interface IMailService
 {
-    void SendMail(User user);
+    void SendMail(User user, Document document);
 }

@@ -14,13 +14,15 @@ public class MailService : IMailService
         _logger = logger;
     }
 
-    public void SendMail(User user)
+    public void SendMail(User user, Document document)
     {
         var smtpServer = "localhost";
         var smtpPort = 1025;
         
         var subject = "Nouveau document";
-        var body = "Bonjour,\n\nUn document a été ajouté dans une catégorie où vous êtes abonnés.\n\nFTREEL";
+        var body = "Bonjour,\n\nLe document " + document.Title 
+            + " a été ajouté dans la catégorie " 
+            + document.Category.Name + " où vous êtes abonné.\n\nFTREEL";
         
         var mailMessage = new MailMessage(SystemMail.FTREEL_SYSTEM_MAIL, user.Mail, subject, body);
         var smtpClient = new SmtpClient(smtpServer, smtpPort);

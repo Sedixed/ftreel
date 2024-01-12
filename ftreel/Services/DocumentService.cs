@@ -110,6 +110,13 @@ public class DocumentService : IDocumentService
         if (user.Roles.Contains(Roles.ROLE_ADMIN.ToString()))
         {
             document.IsValidated = true;
+            if (document.Category != null)
+            {
+                foreach (var userBis in document.Category.Followers)
+                {
+                    _mailService.SendMail(userBis, document);
+                }
+            }
         }
 
         // Save in database.
@@ -290,7 +297,7 @@ public class DocumentService : IDocumentService
         if (document.Category == null) return;
         foreach (var user in document.Category.Followers)
         {
-            _mailService.SendMail(user);
+            _mailService.SendMail(user, document);
         }
     }
 
