@@ -12,6 +12,7 @@ public class DocumentItemDTO
     public string Path { get; set; }
     public bool Liked { get; set; } = false;
     public int NbLikes { get; set; } = 0;
+    public bool IsValidated { get; set; } = false;
 
     public DocumentItemDTO(Document document, User currentLoggedUser)
     {
@@ -29,6 +30,7 @@ public class DocumentItemDTO
             }
         }
         NbLikes = document.Likes.Count;
+        IsValidated = document.IsValidated;
     }
     
     public DocumentItemDTO(Document document)
@@ -40,5 +42,6 @@ public class DocumentItemDTO
         Author = document.Author?.Mail;
         Path = document.GetPath();
         NbLikes = document.Likes.Count;
+        IsValidated = document.IsValidated;
     }
 }

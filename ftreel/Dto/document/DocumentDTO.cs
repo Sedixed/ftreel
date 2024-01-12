@@ -13,6 +13,7 @@ public class DocumentDTO
     public string Path { get; set; }
     public bool Liked { get; set; } = false;
     public int NbLikes { get; set; } = 0;
+    public bool IsValidated { get; set; } = false;
     public CategoryItemDTO? Category { get; set; }
     public string Base64 { get; set; } = string.Empty;
 
@@ -40,6 +41,7 @@ public class DocumentDTO
         {
             Category = new CategoryItemDTO(document.Category);
         }
+        IsValidated = document.IsValidated;
 
         Base64 = document.Base64;
     }
