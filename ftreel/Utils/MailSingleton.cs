@@ -33,7 +33,6 @@ namespace ftreel.Utils
                 Subject = ReplacePlaceholder(Subject, "Category", Document.Category.Name);
                 Subject = ReplacePlaceholder(Subject, "Author", Document.Author?.Mail ?? "");
                 Body = ReplacePlaceholder(Body, "Url", Document.GetDocumentUrl());
-                Body = ReplacePlaceholder(Body, "Url", Document.GetPath());
                 Body = ReplacePlaceholder(Body, "Title", Document.Title);
                 Body = ReplacePlaceholder(Body, "Description", Document.Description);
                 Body = ReplacePlaceholder(Body, "Category", Document.Category.Name);

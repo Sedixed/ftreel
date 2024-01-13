@@ -241,11 +241,11 @@ public class DocumentController : Controller
 
     [HttpPost]
     [Authorize(Roles = "ROLE_ADMIN")]
-    public IActionResult SetMailTemplate(string customSubject, string customBody)
+    public IActionResult SetMailTemplate(SetMailTemplateDTO request)
     {
         var singleton = MailSingleton.GetInstanceMailSingleton();
-        singleton.Subject = customSubject;
-        singleton.Body = customBody;
+        singleton.Subject = request.CustomSubject;
+        singleton.Body = request.CustomBody;
         singleton.ReplacePlaceHolders();
         return Ok("Custom mail set");
     }
